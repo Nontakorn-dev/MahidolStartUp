@@ -1,0 +1,87 @@
+@import "tailwindcss";
+
+@theme {
+  --color-paper: #FAF7F0;
+  --color-ink: #12213A;
+  --color-ink-soft: #2C3C57;
+  --color-gold: #C9A227;
+  --color-gold-deep: #8A6D14;
+  --color-gold-tint: #F1E6BE;
+  --color-line: #DAD3C1;
+  --color-muted: #6B6656;
+  --color-ink-border: #26364F;
+  --color-ink-muted: #9BA6B8;
+  --color-hero-text: #B9C1CE;
+  --color-flow-bg: #F1ECDF;
+
+  --font-heading: 'Kanit', sans-serif;
+  --font-body: 'IBM Plex Sans Thai', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* legacy aliases */
+  --color-mu-navy: #12213A;
+  --color-mu-navy-light: #2C3C57;
+  --color-mu-gold: #C9A227;
+  --color-mu-gold-light: #F1E6BE;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-ink);
+  background: var(--color-paper);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.font-heading { font-family: var(--font-heading); }
+.font-mono { font-family: var(--font-mono); }
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+}
+
+.wrap {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+.prose h2 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+  color: var(--color-ink);
+}
+
+.prose p {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  color: var(--color-ink-soft);
+}
+
+.prose ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose a {
+  color: var(--color-gold-deep);
+  text-decoration: underline;
+}
+
+@media (max-width: 820px) {
+  .wrap { padding: 0 20px; }
+}
