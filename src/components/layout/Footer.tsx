@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import { SOCIAL_LINKS } from '../../lib/constants'
-import { Globe, Camera, MessageCircle } from 'lucide-react'
+import { SOCIAL_LINKS, SOCIAL_ICONS } from '../../lib/constants'
+import { Globe } from 'lucide-react'
+import { BrandLogo } from './BrandLogo'
 
 export function SiteFooter() {
   return (
@@ -8,9 +9,8 @@ export function SiteFooter() {
       <div className="wrap py-12 md:py-14">
         <div className="grid gap-10 md:grid-cols-4">
           <div className="md:col-span-2">
-            <div className="mb-4 flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gold text-sm font-bold text-ink">MU</span>
-              <span className="font-heading text-sm font-semibold tracking-wide">MAHIDOL STARTUP CLUB</span>
+            <div className="mb-4">
+              <BrandLogo size="footer" imageClassName="rounded-lg" />
             </div>
             <p className="max-w-sm text-sm leading-relaxed text-hero-text md:text-base">
               ชุมชนสำหรับผู้ที่สนใจ startup, entrepreneurship, technology และ innovation
@@ -37,22 +37,33 @@ export function SiteFooter() {
           <div>
             <p className="eyebrow mb-4 !text-gold">ติดต่อเรา</p>
             <div className="flex gap-3">
-              {[
-                { href: SOCIAL_LINKS.facebook, icon: Globe, label: 'Facebook' },
-                { href: SOCIAL_LINKS.instagram, icon: Camera, label: 'Instagram' },
-                { href: SOCIAL_LINKS.line, icon: MessageCircle, label: 'Line' },
-              ].map((s) => (
-                <a
-                  key={s.label}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  title={s.label}
-                  className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white/80 no-underline transition-colors hover:bg-gold hover:text-ink"
-                >
-                  <s.icon className="h-4 w-4" />
-                </a>
-              ))}
+              <a
+                href={SOCIAL_LINKS.facebook}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Facebook"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 text-white/80 no-underline transition-colors hover:bg-gold hover:text-ink"
+              >
+                <Globe className="h-4 w-4" />
+              </a>
+              <a
+                href={SOCIAL_LINKS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Instagram"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 no-underline transition-opacity hover:bg-white/20 hover:opacity-90"
+              >
+                <img src={SOCIAL_ICONS.instagram} alt="Instagram" className="h-5 w-5 object-contain" width={20} height={20} />
+              </a>
+              <a
+                href={SOCIAL_LINKS.line}
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Line"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10 no-underline transition-opacity hover:bg-white/20 hover:opacity-90"
+              >
+                <img src={SOCIAL_ICONS.line} alt="Line" className="h-5 w-5 object-contain" width={20} height={20} />
+              </a>
             </div>
             <p className="mt-4 text-xs text-ink-muted">@mahidolstartup_official</p>
           </div>

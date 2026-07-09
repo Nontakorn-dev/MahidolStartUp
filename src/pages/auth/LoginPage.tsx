@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext'
 import { Input } from '../../components/ui/Input'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
+import { BrandLogo } from '../../components/layout/BrandLogo'
 
 export function LoginPage() {
   const [email, setEmail] = useState('')
@@ -31,6 +32,9 @@ export function LoginPage() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
+        <div className="mb-6 flex justify-center">
+          <BrandLogo linkToHome size="auth" />
+        </div>
         <h1 className="mb-1 font-heading text-2xl text-ink">เข้าสู่ระบบ</h1>
         <p className="mb-6 text-sm text-ink-soft">MU Startup Hub</p>
 

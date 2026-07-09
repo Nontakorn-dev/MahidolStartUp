@@ -52,7 +52,7 @@ export function MatchHubPage() {
 
       <FeaturedStartupsSection actionHref="/news" />
 
-      <section className="bg-ted-light/60 section-pad">
+      <section className="section-pad bg-gradient-to-b from-ted-light/35 to-ted-mist/20">
         <div className="wrap text-center">
           <Sparkles className="mx-auto mb-4 h-10 w-10 text-gold" />
           <h2 className="font-heading text-2xl text-ink">พร้อมเริ่มต้นแล้วหรือยัง?</h2>

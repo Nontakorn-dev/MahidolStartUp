@@ -3,22 +3,15 @@ import { useQuery } from '@tanstack/react-query'
 import { Globe, Users, Newspaper, ArrowRight, Sparkles } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { HomeHeroNav } from '../../components/layout/Navbar'
-import { TopBar } from '../../components/layout/TopBar'
 import { HomeCtaFooter } from '../../components/layout/Footer'
 import { NetworkDiagram } from '../../components/home/NetworkDiagram'
 import { SectionHeader } from '../../components/ui/SectionHeader'
 import { EventCardGrid } from '../../components/ui/EventCard'
 import { NewsCardGrid } from '../../components/ui/NewsCard'
 import { FeaturedStartupsSection } from '../../components/home/FeaturedStartupsSection'
+import { PartnerLogoMarquee } from '../../components/home/PartnerLogoMarquee'
 import { getUpcomingEvents } from '../../data/events'
 import type { Post } from '../../types'
-
-const stats = [
-  { num: '100+', lbl: 'โปรไฟล์ startup / mentor' },
-  { num: '30+', lbl: 'การจับคู่ที่สำเร็จ' },
-  { num: '30%', lbl: 'โปรไฟล์จากภายนอกมหิดล' },
-  { num: '80%', lbl: 'ลงทะเบียนผ่านแพลตฟอร์ม' },
-]
 
 const pillars = [
   {
@@ -26,7 +19,7 @@ const pillars = [
     tag: 'Public hub',
     title: 'หน้าเว็บชมรม',
     desc: 'รวมข่าว กิจกรรม และช่องทางติดต่อไว้ในที่เดียว ให้คนนอกมหิดลตามงานชมรมได้ง่าย',
-    color: 'bg-ted-light text-ted-sky',
+    color: 'bg-ted-light/80 text-ted-sky',
   },
   {
     icon: Newspaper,
@@ -77,8 +70,7 @@ export function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <header className="relative overflow-hidden border-b border-line bg-surface">
-        <TopBar />
+      <header className="relative overflow-hidden border-b border-line bg-gradient-to-b from-ted-light/70 via-ted-mist/40 to-surface">
         <div className="wrap relative">
           <HomeHeroNav />
 
@@ -111,26 +103,7 @@ export function HomePage() {
           </div>
         </div>
 
-        {/* Stats bar */}
-        <div className="border-t border-line bg-flow-bg">
-          <div className="wrap !px-0">
-            <div className="grid grid-cols-2 lg:grid-cols-4">
-              {stats.map((s, i) => (
-                <div
-                  key={s.num}
-                  className={`px-5 py-5 md:px-8 md:py-6 ${
-                    i < stats.length - 1
-                      ? 'border-b border-line lg:border-b-0 lg:border-r'
-                      : ''
-                  } ${i % 2 === 0 ? 'border-r border-line lg:border-r' : ''} ${i === 2 ? 'lg:border-r' : ''}`}
-                >
-                  <div className="font-heading text-2xl font-semibold text-gold-deep md:text-3xl">{s.num}</div>
-                  <div className="mt-1 text-xs font-medium leading-snug text-ink-soft md:text-sm">{s.lbl}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <PartnerLogoMarquee />
       </header>
 
       {/* Pillars */}
@@ -156,7 +129,7 @@ export function HomePage() {
       </section>
 
       {/* Matching flow */}
-      <section className="section-pad bg-ted-light/60" id="matching">
+      <section className="section-pad bg-gradient-to-b from-ted-light/35 to-ted-mist/20" id="matching">
         <div className="wrap">
           <SectionHeader
             eyebrow="กลไกการจับคู่"
@@ -202,7 +175,7 @@ export function HomePage() {
                 key={p.title}
                 className="card-elevated flex gap-4 p-5 md:p-6"
               >
-                <div className="mt-1 h-full w-1 shrink-0 rounded-full bg-gradient-to-b from-gold to-ted-sky" />
+                <div className="mt-1 h-full w-1 shrink-0 rounded-full bg-gradient-to-b from-gold/80 to-ted-sky/50" />
                 <div>
                   <b className="block font-heading text-base text-ink md:text-lg">{p.title}</b>
                   <span className="mt-1 block text-sm text-ink-soft">{p.desc}</span>

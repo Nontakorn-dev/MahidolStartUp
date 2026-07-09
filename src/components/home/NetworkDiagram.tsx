@@ -28,7 +28,7 @@ export function NetworkDiagram() {
 
           <linearGradient id="nd-line" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#C9A227" stopOpacity="0.15" />
-            <stop offset="50%" stopColor="#1A6BB5" stopOpacity="0.45" />
+            <stop offset="50%" stopColor="#3A7DB5" stopOpacity="0.28" />
             <stop offset="100%" stopColor="#C9A227" stopOpacity="0.15" />
           </linearGradient>
 
@@ -76,7 +76,7 @@ export function NetworkDiagram() {
         </defs>
 
         {/* Soft ambient backdrop */}
-        <circle cx="220" cy="200" r="168" fill="#E8F2FA" fillOpacity="0.45" />
+        <circle cx="220" cy="200" r="168" fill="#F0F5FA" fillOpacity="0.35" />
         <circle cx="220" cy="200" r="132" fill="#FAF7F0" fillOpacity="0.7" />
 
         {/* Orbital rings */}
@@ -96,9 +96,9 @@ export function NetworkDiagram() {
           cy="200"
           r="148"
           fill="none"
-          stroke="#1A6BB5"
+          stroke="#3A7DB5"
           strokeWidth="1"
-          strokeOpacity="0.18"
+          strokeOpacity="0.12"
           strokeDasharray="2 14"
           className="nd-orbit-ring"
           style={{ animationDuration: '40s', animationDirection: 'reverse' }}

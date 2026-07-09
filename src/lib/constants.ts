@@ -54,6 +54,13 @@ export const POST_CATEGORIES = [
   'general',
 ] as const
 
+export const SITE_LOGO = '/content/logo/logo.png'
+
+export const SOCIAL_ICONS = {
+  line: '/content/icon/line.png',
+  instagram: '/content/icon/instagram.png',
+} as const
+
 export const SOCIAL_LINKS = {
   facebook: 'https://www.facebook.com/',
   instagram: 'https://www.instagram.com/mahidolstartup_official',

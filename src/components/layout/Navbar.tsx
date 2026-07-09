@@ -5,7 +5,8 @@ import { useAuth } from '../../contexts/AuthContext'
 import { cn } from '../../lib/utils'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
-import { TopBar } from './TopBar'
+import { SOCIAL_LINKS, SOCIAL_ICONS } from '../../lib/constants'
+import { BrandLogo } from './BrandLogo'
 
 const navLinks = [
   { to: '/events', label: 'กิจกรรม' },
@@ -40,23 +41,36 @@ function useNotifications() {
   })
 }
 
-function Brand({ light = false }: { light?: boolean }) {
+function HeaderBrand() {
+  return <BrandLogo linkToHome size="nav" />
+}
+
+function HeaderSocialLinks({ className }: { className?: string }) {
+  const iconClass = 'flex h-9 w-9 items-center justify-center rounded-lg no-underline transition-opacity hover:bg-ted-light/60 hover:opacity-90'
+
   return (
-    <Link
-      to="/"
-      className={cn(
-        'flex items-center gap-3 font-heading text-base font-semibold tracking-wide no-underline md:text-lg',
-        light ? 'text-white' : 'text-ink',
-      )}
-    >
-      <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gold text-sm font-bold text-ink shadow-sm">
-        MU
-      </span>
-      <span className="hidden leading-tight sm:block">
-        <span className="block">MAHIDOL STARTUP</span>
-        <span className={cn('block text-xs font-medium', light ? 'text-hero-text' : 'text-ink-soft')}>CLUB</span>
-      </span>
-    </Link>
+    <div className={cn('flex items-center gap-0.5', className)}>
+      <a
+        href={SOCIAL_LINKS.line}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={iconClass}
+        title="Line OpenChat"
+        aria-label="Line OpenChat"
+      >
+        <img src={SOCIAL_ICONS.line} alt="" className="h-5 w-5 object-contain" width={20} height={20} />
+      </a>
+      <a
+        href={SOCIAL_LINKS.instagram}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={iconClass}
+        title="@mahidolstartup_official"
+        aria-label="Instagram"
+      >
+        <img src={SOCIAL_ICONS.instagram} alt="" className="h-5 w-5 object-contain" width={20} height={20} />
+      </a>
+    </div>
   )
 }
 
@@ -80,8 +94,8 @@ function MobileDrawer({
     <>
       <div className="mobile-menu-overlay lg:hidden" onClick={onClose} />
       <div className="mobile-menu-panel lg:hidden">
-        <div className="mb-6 flex items-center justify-between">
-          <Brand />
+        <div className="mb-6 flex items-start justify-between gap-3">
+          <HeaderBrand />
           <button onClick={onClose} className="rounded-lg p-2 text-ink hover:bg-flow-bg">
             <X className="h-5 w-5" />
           </button>
@@ -93,59 +107,8 @@ function MobileDrawer({
 }
 
 const siteNavLink = 'rounded-lg px-3.5 py-2.5 text-sm font-medium no-underline transition-colors'
-const siteNavIdle = 'text-ink-soft hover:bg-ted-light hover:text-ink'
-const siteNavActive = 'bg-ted-light text-ted-blue font-semibold'
-
-export function HomeHeroNav() {
-  const [open, setOpen] = useState(false)
-  const { user, profile, signOut } = useAuth()
-  const { data: unreadCount = 0 } = useNotifications()
-  const isAdmin = !!(profile && ['pr', 'core_team', 'admin'].includes(profile.role))
-
-  return (
-    <>
-      <div className="flex items-center justify-between py-5 md:py-6">
-        <Brand />
-
-        <nav className="hidden items-center gap-0.5 lg:flex">
-          {homeAnchors.map((a) => (
-            <a key={a.href} href={a.href} className={cn(siteNavLink, siteNavIdle)}>
-              {a.label}
-            </a>
-          ))}
-          <div className="mx-2 h-6 w-px bg-line" />
-          <AuthLinks user={user} profile={profile} isAdmin={isAdmin} unreadCount={unreadCount} />
-        </nav>
-
-        <button
-          className="rounded-xl p-2.5 text-ink hover:bg-flow-bg lg:hidden"
-          onClick={() => setOpen(true)}
-          aria-label="เมนู"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
-      </div>
-
-      <MobileDrawer open={open} onClose={() => setOpen(false)}>
-        <nav className="space-y-1">
-          {homeAnchors.map((a) => (
-            <a
-              key={a.href}
-              href={a.href}
-              onClick={() => setOpen(false)}
-              className="block rounded-lg px-3 py-3.5 text-base font-medium text-ink no-underline hover:bg-ted-light"
-            >
-              {a.label}
-            </a>
-          ))}
-        </nav>
-        <div className="mt-4 border-t border-line pt-4">
-          <MobileAuth user={user} isAdmin={isAdmin} onClose={() => setOpen(false)} signOut={signOut} />
-        </div>
-      </MobileDrawer>
-    </>
-  )
-}
+const siteNavIdle = 'text-ink-soft hover:bg-ted-light/60 hover:text-ink'
+const siteNavActive = 'bg-ted-light/70 text-ted-blue font-semibold'
 
 function AuthLinks({
   light,
@@ -166,7 +129,7 @@ function AuthLinks({
 
   if (!user) {
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3">
         <Link to="/login" className={cn(linkClass, 'px-2 py-2')}>เข้าสู่ระบบ</Link>
         <Link to="/register" className={light ? 'btn-signup' : 'btn-signup btn-signup--solid'}>
           สมัคร
@@ -229,6 +192,90 @@ function MobileAuth({
   )
 }
 
+function MobileSocialLinks() {
+  return (
+    <div className="mt-6 border-t border-line pt-4">
+      <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-ink-soft">ติดตามเรา</p>
+      <div className="flex gap-2">
+        <a
+          href={SOCIAL_LINKS.line}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-line py-3 text-sm font-medium text-ink no-underline hover:bg-ted-light"
+        >
+          <img src={SOCIAL_ICONS.line} alt="" className="h-5 w-5 object-contain" width={20} height={20} />
+          Line
+        </a>
+        <a
+          href={SOCIAL_LINKS.instagram}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-line py-3 text-sm font-medium text-ink no-underline hover:bg-ted-light"
+        >
+          <img src={SOCIAL_ICONS.instagram} alt="" className="h-5 w-5 object-contain" width={20} height={20} />
+          Instagram
+        </a>
+      </div>
+    </div>
+  )
+}
+
+export function HomeHeroNav() {
+  const [open, setOpen] = useState(false)
+  const { user, profile, signOut } = useAuth()
+  const { data: unreadCount = 0 } = useNotifications()
+  const isAdmin = !!(profile && ['pr', 'core_team', 'admin'].includes(profile.role))
+
+  return (
+    <>
+      <div className="flex items-center justify-between gap-3 py-3 md:gap-4 md:py-4">
+        <HeaderBrand />
+
+        <nav className="hidden items-center gap-0.5 lg:flex">
+          {homeAnchors.map((a) => (
+            <a key={a.href} href={a.href} className={cn(siteNavLink, siteNavIdle)}>
+              {a.label}
+            </a>
+          ))}
+        </nav>
+
+        <div className="hidden items-center gap-2 lg:flex">
+          <HeaderSocialLinks />
+          <div className="mx-1 h-6 w-px bg-line" />
+          <AuthLinks user={user} profile={profile} isAdmin={isAdmin} unreadCount={unreadCount} />
+        </div>
+
+        <button
+          className="rounded-xl p-2.5 text-ink hover:bg-flow-bg lg:hidden"
+          onClick={() => setOpen(true)}
+          aria-label="เมนู"
+        >
+          <Menu className="h-6 w-6" />
+        </button>
+      </div>
+
+      <MobileDrawer open={open} onClose={() => setOpen(false)}>
+        <nav className="space-y-1">
+          {homeAnchors.map((a) => (
+            <a
+              key={a.href}
+              href={a.href}
+              onClick={() => setOpen(false)}
+              className="block rounded-lg px-3 py-3.5 text-base font-medium text-ink no-underline hover:bg-ted-light"
+            >
+              {a.label}
+            </a>
+          ))}
+        </nav>
+        <div className="mt-4 border-t border-line pt-4">
+          <MobileAuth user={user} isAdmin={isAdmin} onClose={() => setOpen(false)} signOut={signOut} />
+        </div>
+        <MobileSocialLinks />
+      </MobileDrawer>
+    </>
+  )
+}
+
 export function SiteNavbar() {
   const [open, setOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
@@ -245,8 +292,6 @@ export function SiteNavbar() {
 
   return (
     <>
-      <TopBar />
-
       <header
         className={cn(
           'sticky top-0 z-40 transition-all duration-300',
@@ -255,38 +300,42 @@ export function SiteNavbar() {
             : 'border-b border-line bg-surface',
         )}
       >
-        <div className="wrap flex min-h-[68px] items-center justify-between md:min-h-[72px]">
-          <Brand />
+        <div className="wrap">
+          <div className="flex items-center justify-between gap-3 py-3 md:gap-4 md:py-4">
+            <HeaderBrand />
 
-          <nav className="hidden items-center gap-0.5 lg:flex">
-            {navLinks.map((link) => {
-              const active = location.pathname === link.to || location.pathname.startsWith(link.to + '/')
-              return (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={cn(siteNavLink, active ? siteNavActive : siteNavIdle)}
-                >
-                  {link.label}
-                </Link>
-              )
-            })}
-          </nav>
+            <nav className="hidden items-center gap-0.5 lg:flex">
+              {navLinks.map((link) => {
+                const active = location.pathname === link.to || location.pathname.startsWith(link.to + '/')
+                return (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className={cn(siteNavLink, active ? siteNavActive : siteNavIdle)}
+                  >
+                    {link.label}
+                  </Link>
+                )
+              })}
+            </nav>
 
-          <div className="hidden items-center gap-2 lg:flex">
-            <AuthLinks user={user} profile={profile} isAdmin={isAdmin} unreadCount={unreadCount} />
-            {user && (
-              <button onClick={() => signOut()} className="ml-1 px-2 py-2 text-sm font-medium text-ink-soft hover:text-ink">ออก</button>
-            )}
+            <div className="hidden items-center gap-2 lg:flex">
+              <HeaderSocialLinks />
+              <div className="mx-1 h-6 w-px bg-line" />
+              <AuthLinks user={user} profile={profile} isAdmin={isAdmin} unreadCount={unreadCount} />
+              {user && (
+                <button onClick={() => signOut()} className="ml-1 px-2 py-2 text-sm font-medium text-ink-soft hover:text-ink">ออก</button>
+              )}
+            </div>
+
+            <button
+              className="rounded-xl p-2.5 text-ink hover:bg-flow-bg lg:hidden"
+              onClick={() => setOpen(true)}
+              aria-label="เมนู"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
           </div>
-
-          <button
-            className="rounded-xl p-2.5 text-ink hover:bg-flow-bg lg:hidden"
-            onClick={() => setOpen(true)}
-            aria-label="เมนู"
-          >
-            <Menu className="h-6 w-6" />
-          </button>
         </div>
       </header>
 
@@ -306,6 +355,7 @@ export function SiteNavbar() {
         <div className="mt-4 border-t border-line pt-4">
           <MobileAuth user={user} isAdmin={isAdmin} onClose={() => setOpen(false)} signOut={signOut} />
         </div>
+        <MobileSocialLinks />
       </MobileDrawer>
     </>
   )

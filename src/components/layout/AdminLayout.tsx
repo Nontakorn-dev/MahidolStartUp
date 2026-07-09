@@ -1,6 +1,7 @@
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import { LayoutDashboard, FileText, Calendar, Users, ArrowLeft, Rocket, Handshake, Kanban } from 'lucide-react'
 import { cn } from '../../lib/utils'
+import { BrandLogo } from './BrandLogo'
 
 const adminLinks = [
   { to: '/admin', label: 'Dashboard', icon: LayoutDashboard, exact: true },
@@ -19,6 +20,8 @@ export function AdminLayout() {
     <div className="min-h-screen bg-flow-bg">
       <div className="border-b border-line bg-paper">
         <div className="wrap flex h-14 items-center gap-4">
+          <BrandLogo linkToHome size="compact" />
+          <span className="text-line">|</span>
           <Link to="/" className="flex items-center gap-2 text-sm text-ink-soft no-underline hover:text-ink">
             <ArrowLeft className="h-4 w-4" />
             กลับเว็บไซต์

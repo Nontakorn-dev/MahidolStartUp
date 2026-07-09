@@ -15,8 +15,9 @@
   --color-hero-text-strong: #F4F6F9;
   --color-flow-bg: #F1ECDF;
   --color-ted-blue: #0B3D6B;
-  --color-ted-sky: #1A6BB5;
-  --color-ted-light: #E8F2FA;
+  --color-ted-sky: #3A7DB5;
+  --color-ted-light: #F0F5FA;
+  --color-ted-mist: #F7FAFC;
   --color-surface: #FFFFFF;
 
   --font-heading: 'Kanit', sans-serif;
@@ -385,6 +386,172 @@ h1, h2, h3, h4 {
 .top-bar__link--cta:hover {
   background: var(--color-gold);
   color: var(--color-ink);
+}
+
+/* Partner logo marquee — TED Fund style */
+.partner-marquee {
+  padding: 20px 0;
+}
+
+@media (min-width: 768px) {
+  .partner-marquee {
+    padding: 28px 0;
+  }
+}
+
+.partner-marquee__viewport {
+  position: relative;
+  overflow: hidden;
+}
+
+.partner-marquee__viewport::before,
+.partner-marquee__viewport::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 40px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.partner-marquee__viewport::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--color-surface) 20%, rgb(255 255 255 / 0));
+}
+
+.partner-marquee__viewport::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--color-surface) 20%, rgb(255 255 255 / 0));
+}
+
+@media (min-width: 768px) {
+  .partner-marquee__viewport::before,
+  .partner-marquee__viewport::after {
+    width: 64px;
+  }
+}
+
+.partner-marquee__track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  animation: partner-marquee-scroll 42s linear infinite;
+  will-change: transform;
+}
+
+.partner-marquee__group {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 28px;
+  padding-right: 28px;
+}
+
+@media (min-width: 768px) {
+  .partner-marquee__group {
+    gap: 40px;
+    padding-right: 40px;
+  }
+}
+
+.partner-marquee__item {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.partner-marquee__item--club {
+  /* crop frame controls footprint — no extra min-width gap */
+}
+
+.partner-marquee__logo {
+  display: block;
+  height: 52px;
+  width: auto;
+  max-width: 190px;
+  object-fit: contain;
+  opacity: 0.92;
+  filter: grayscale(6%);
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .partner-marquee__logo {
+    height: 64px;
+    max-width: 230px;
+  }
+}
+
+/* MSC logo has large empty margins in the PNG — zoom + crop */
+.partner-marquee__logo-crop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+  width: 188px;
+  height: 52px;
+}
+
+@media (min-width: 768px) {
+  .partner-marquee__logo-crop {
+    width: 228px;
+    height: 64px;
+  }
+}
+
+.partner-marquee__logo--club {
+  height: 64px;
+  width: auto;
+  max-width: none;
+  transform: scale(1.85);
+  transform-origin: center center;
+}
+
+@media (min-width: 768px) {
+  .partner-marquee__logo--club {
+    height: 76px;
+    transform: scale(1.9);
+  }
+}
+
+.partner-marquee__item:hover .partner-marquee__logo {
+  opacity: 1;
+  filter: grayscale(0%);
+}
+
+@keyframes partner-marquee-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .partner-marquee__track {
+    animation: none;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    gap: 32px 48px;
+    padding: 0 24px;
+  }
+
+  .partner-marquee__group {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding-right: 0;
+    gap: 32px 48px;
+  }
+
+  .partner-marquee__group + .partner-marquee__group {
+    display: none;
+  }
+
+  .partner-marquee__viewport::before,
+  .partner-marquee__viewport::after {
+    display: none;
+  }
 }
 
 /* Flow stepper mobile */
