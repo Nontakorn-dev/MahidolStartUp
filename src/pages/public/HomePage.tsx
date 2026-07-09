@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
-import { Globe, Users, Newspaper, ArrowRight, Sparkles } from 'lucide-react'
+import { Newspaper, ArrowRight, Sparkles } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { HomeHeroNav } from '../../components/layout/Navbar'
 import { HomeCtaFooter } from '../../components/layout/Footer'
@@ -13,42 +13,11 @@ import { PartnerLogoMarquee } from '../../components/home/PartnerLogoMarquee'
 import { getUpcomingEvents } from '../../data/events'
 import type { Post } from '../../types'
 
-const pillars = [
-  {
-    icon: Globe,
-    tag: 'Public hub',
-    title: 'หน้าเว็บชมรม',
-    desc: 'รวมข่าว กิจกรรม และช่องทางติดต่อไว้ในที่เดียว ให้คนนอกมหิดลตามงานชมรมได้ง่าย',
-    color: 'bg-ted-light/80 text-ted-sky',
-  },
-  {
-    icon: Newspaper,
-    tag: 'PR CMS',
-    title: 'โพสต์เองได้ ไม่ต้องรอ dev',
-    desc: 'ทีม PR เขียนข่าว อัปโหลดรูป และเผยแพร่ได้ภายในไม่กี่นาที พร้อมดูตัวอย่างก่อนลงจริง',
-    color: 'bg-gold-tint text-gold-deep',
-  },
-  {
-    icon: Users,
-    tag: 'Match hub',
-    title: 'จับคู่ทางธุรกิจตลอดปี',
-    desc: 'สตาร์ตอัพ เมนเทอร์ และนักลงทุน สร้างโปรไฟล์ ค้นหากัน และส่งคำขอเชื่อมต่ออย่างมีโครงสร้าง',
-    color: 'bg-ink/5 text-ink',
-  },
-]
-
 const flowSteps = [
   { step: '01', title: 'สร้างโปรไฟล์', desc: 'ระบุสิ่งที่มองหาและสิ่งที่ให้ได้' },
   { step: '02', title: 'ค้นหา / กรอง', desc: 'ตามประเภท อุตสาหกรรม หรือสังกัด' },
   { step: '03', title: 'ส่งคำขอ', desc: 'พร้อมข้อความสั้น ๆ ถึงอีกฝ่าย' },
   { step: '04', title: 'ตอบรับ', desc: 'เห็นช่องทางติดต่อกันทันที' },
-]
-
-const programs = [
-  { title: 'Mahidol Startup Thailand League', desc: 'เวทีแข่งขันระดับประเทศสำหรับทีมมหิดล' },
-  { title: 'Mahidol TED Youth Startup', desc: 'โครงการบ่มเพาะไอเดียรุ่นเยาว์' },
-  { title: 'Mahidol Incubation Program', desc: 'พาไอเดียสู่ต้นแบบธุรกิจที่ใช้งานได้จริง' },
-  { title: 'MU InnoMatch', desc: 'งาน business matching กับนักลงทุนและภาคธุรกิจ' },
 ]
 
 export function HomePage() {
@@ -106,35 +75,13 @@ export function HomePage() {
         <PartnerLogoMarquee />
       </header>
 
-      {/* Pillars */}
-      <section className="section-pad bg-surface" id="pillars">
-        <div className="wrap">
-          <SectionHeader
-            eyebrow="สามส่วนหลัก"
-            title="แพลตฟอร์มเดียว ครบทั้งข่าวสารและเครือข่าย"
-            description="ออกแบบมาให้ทีม PR โพสต์เองได้ และให้การจับคู่ธุรกิจเกิดขึ้นได้ทุกวัน ไม่ใช่แค่ในงานอีเวนต์"
-          />
-          <div className="grid gap-5 md:grid-cols-3">
-            {pillars.map((p) => (
-              <article key={p.tag} className="card-elevated group p-6 md:p-8">
-                <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl ${p.color}`}>
-                  <p.icon className="h-6 w-6" />
-                </div>
-                <div className="font-mono text-[10px] uppercase tracking-widest text-ink-soft">{p.tag}</div>
-                <h3 className="mt-2 font-heading text-lg text-ink md:text-xl">{p.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-ink-soft">{p.desc}</p>              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Matching flow */}
+      {/* Platform steps */}
       <section className="section-pad bg-gradient-to-b from-ted-light/35 to-ted-mist/20" id="matching">
         <div className="wrap">
           <SectionHeader
-            eyebrow="กลไกการจับคู่"
-            title="ลดข้อความทักไปแบบไม่มีจุดหมาย"
-            description='ทุกโปรไฟล์ต้องระบุชัดว่า "กำลังมองหาอะไร" และ "ให้อะไรได้" ก่อนส่งคำขอเชื่อมต่อ — ข้อมูลติดต่อจะแสดงก็ต่อเมื่อทั้งสองฝ่ายตอบรับ'
+            eyebrow="MSC Connect"
+            title="ขั้นตอนการใช้แพลตฟอร์ม"
+            description="สร้างโปรไฟล์ ค้นหาคู่เชื่อมต่อ ส่งคำขอ และเริ่มคุยกันเมื่อทั้งสองฝ่ายตอบรับ"
           />
 
           <div className="flow-stepper gap-3 md:gap-0">
@@ -158,30 +105,6 @@ export function HomePage() {
             <Link to="/match/discover" className="btn-secondary">
               เริ่มค้นหา Partner <ArrowRight className="h-4 w-4" />
             </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* Programs */}
-      <section className="section-pad" id="programs">
-        <div className="wrap">
-          <SectionHeader
-            eyebrow="โครงการร่วมกับ iNT"
-            title="สนามจริงสำหรับทดสอบไอเดีย"
-          />
-          <div className="grid gap-4 sm:grid-cols-2">
-            {programs.map((p) => (
-              <div
-                key={p.title}
-                className="card-elevated flex gap-4 p-5 md:p-6"
-              >
-                <div className="mt-1 h-full w-1 shrink-0 rounded-full bg-gradient-to-b from-gold/80 to-ted-sky/50" />
-                <div>
-                  <b className="block font-heading text-base text-ink md:text-lg">{p.title}</b>
-                  <span className="mt-1 block text-sm text-ink-soft">{p.desc}</span>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </section>

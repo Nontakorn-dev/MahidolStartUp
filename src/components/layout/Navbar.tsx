@@ -16,9 +16,7 @@ const navLinks = [
 ]
 
 const homeAnchors = [
-  { href: '#pillars', label: 'แพลตฟอร์ม' },
-  { href: '#matching', label: 'Match Hub' },
-  { href: '#programs', label: 'โครงการ' },
+  { href: '#matching', label: 'ขั้นตอนใช้งาน' },
   { href: '#events', label: 'กิจกรรม' },
   { href: '#join', label: 'ติดต่อ' },
 ]

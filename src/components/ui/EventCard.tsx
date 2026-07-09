@@ -87,18 +87,11 @@ export function EventCardGrid({
 }) {
   if (events.length === 0) return null
 
-  const [featured, ...rest] = events
-
   return (
-    <div className={cn('event-grid', className)}>
-      {featured && <EventCard event={featured} featured className="event-grid__featured" />}
-      {rest.length > 0 && (
-        <div className="event-grid__list">
-          {rest.map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
-        </div>
-      )}
+    <div className={cn('event-grid event-grid--uniform', className)}>
+      {events.map((event) => (
+        <EventCard key={event.id} event={event} />
+      ))}
     </div>
   )
 }
