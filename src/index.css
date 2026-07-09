@@ -68,23 +68,46 @@ h1, h2, h3, h4 {
 .font-mono { font-family: var(--font-mono); }
 
 .eyebrow {
-  font-family: var(--font-mono);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-heading);
   font-size: 12px;
-  letter-spacing: 2px;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-ink-soft);
-  font-weight: 600;
+  color: var(--color-ted-blue);
+  font-weight: 700;
+}
+
+.eyebrow::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 3px;
+  border-radius: 999px;
+  background: var(--color-gold);
+  flex-shrink: 0;
 }
 
 .eyebrow-light {
   color: var(--color-gold);
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.eyebrow-light::before {
+  background: var(--color-gold);
 }
 
 .wrap {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 0 20px;
+}
+
+@media (min-width: 768px) {
+  .wrap {
+    padding: 0 28px;
+  }
 }
 
 /* TED-style gradient hero — grid + gradient layered together */
@@ -120,11 +143,11 @@ h1, h2, h3, h4 {
 
 /* Section spacing */
 .section-pad {
-  padding: 72px 0;
+  padding: 64px 0;
 }
 
 @media (min-width: 768px) {
-  .section-pad { padding: 96px 0; }
+  .section-pad { padding: 88px 0; }
 }
 
 /* Animations */
@@ -554,7 +577,146 @@ h1, h2, h3, h4 {
   }
 }
 
-/* Flow stepper mobile */
+/* How it works — 4 clean cards in a row */
+.flow-how__header {
+  max-width: 40rem;
+  margin-bottom: 28px;
+}
+
+.flow-how__title {
+  margin-top: 12px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.65rem, 3vw, 2.1rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+.flow-how__desc {
+  margin-top: 12px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--color-ink-soft);
+  max-width: 36rem;
+}
+
+.flow-how__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .flow-how__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .flow-how__grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+}
+
+.flow-how__card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  height: 100%;
+  border-radius: 18px;
+  border: 1px solid rgb(18 33 58 / 0.07);
+  background: var(--color-surface);
+  padding: 22px 20px 24px;
+  box-shadow: 0 2px 14px -6px rgb(18 33 58 / 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.flow-how__card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -10px rgb(18 33 58 / 0.14);
+}
+
+.flow-how__icon {
+  display: inline-flex;
+  height: 44px;
+  width: 44px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+.flow-how__card--sky .flow-how__icon {
+  background: #E8F2FA;
+  color: #0B3D6B;
+}
+
+.flow-how__card--ink .flow-how__icon {
+  background: #EEF1F5;
+  color: #12213A;
+}
+
+.flow-how__card--mint .flow-how__icon {
+  background: #E8F6EF;
+  color: #1B6B45;
+}
+
+.flow-how__num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-ink-soft);
+}
+
+.flow-how__card-title {
+  margin-top: 8px;
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-ink);
+}
+
+.flow-how__card-desc {
+  margin-top: 8px;
+  flex: 1;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--color-ink-soft);
+}
+
+.flow-how__cta {
+  margin-top: 28px;
+}
+
+.flow-how__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 999px;
+  background: var(--color-ink);
+  color: #fff;
+  padding: 12px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.flow-how__btn:hover {
+  background: var(--color-ink-soft);
+  color: #fff;
+}
+
+/* Legacy flow-stepper kept for other pages if any */
 .flow-stepper {
   display: flex;
   flex-direction: column;
@@ -681,6 +843,7 @@ h1, h2, h3, h4 {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: top center;
   transition: transform 0.45s ease;
 }
 
@@ -792,11 +955,29 @@ h1, h2, h3, h4 {
   gap: 24px;
 }
 
+.news-grid--uniform {
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 640px) {
+  .news-grid--uniform {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (min-width: 1024px) {
-  .news-grid {
+  .news-grid--uniform {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .news-grid:not(.news-grid--uniform) {
     grid-template-columns: 1.15fr 0.85fr;
     align-items: stretch;
   }
+}
+
+.news-grid--uniform > * {
+  min-width: 0;
 }
 
 .news-grid__featured {
@@ -1073,15 +1254,15 @@ h1, h2, h3, h4 {
 }
 
 @media (min-width: 640px) {
-  .listing-grid { grid-template-columns: repeat(2, 1fr); }
+  .listing-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (min-width: 1024px) {
-  .listing-grid { grid-template-columns: repeat(3, 1fr); }
+  .listing-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-@media (min-width: 1280px) {
-  .listing-grid--4 { grid-template-columns: repeat(4, 1fr); }
+.listing-grid > * {
+  min-width: 0;
 }
 
 .listing-card__inner {
@@ -1200,12 +1381,21 @@ h1, h2, h3, h4 {
 /* Category filter bar */
 .category-filter {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 8px;
   margin-bottom: 24px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.category-filter::-webkit-scrollbar {
+  display: none;
 }
 
 .category-filter__pill {
+  flex-shrink: 0;
   border-radius: 999px;
   border: 1.5px solid var(--color-line);
   background: var(--color-surface);

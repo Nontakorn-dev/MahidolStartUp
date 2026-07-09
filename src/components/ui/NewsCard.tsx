@@ -129,25 +129,11 @@ export function NewsCardFromPost({
 export function NewsCardGrid({ posts }: { posts: Post[] }) {
   if (posts.length === 0) return null
 
-  const [featured, ...rest] = posts
-
   return (
-    <div className="news-grid">
-      {featured && (
-        <NewsCardFromPost post={featured} variant="featured" className="news-grid__featured" />
-      )}
-
-      {rest.length > 0 && (
-        <div className={cn('news-grid__list', rest.length === 1 && 'news-grid__list--single')}>
-          {rest.map((post) => (
-            <NewsCardFromPost
-              key={post.id}
-              post={post}
-              variant={rest.length <= 2 ? 'compact' : 'default'}
-            />
-          ))}
-        </div>
-      )}
+    <div className="news-grid news-grid--uniform">
+      {posts.map((post) => (
+        <NewsCardFromPost key={post.id} post={post} />
+      ))}
     </div>
   )
 }

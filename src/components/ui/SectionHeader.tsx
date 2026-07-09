@@ -22,14 +22,14 @@ export function SectionHeader({
   className?: string
 }) {
   return (
-    <div className={cn('mb-10 flex flex-wrap items-end justify-between gap-4 md:mb-12', className)}>
-      <div className="max-w-xl">
+    <div className={cn('mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between md:mb-12', className)}>
+      <div className="max-w-2xl">
         <div className={cn('eyebrow', light && 'eyebrow-light')}>{eyebrow}</div>
-        <h2 className={cn('mt-2 font-heading text-2xl md:text-3xl', light ? 'text-white' : 'text-ink')}>
+        <h2 className={cn('mt-3 font-heading text-[1.65rem] leading-tight tracking-tight md:text-[2rem]', light ? 'text-white' : 'text-ink')}>
           {title}
         </h2>
         {description && (
-          <p className={cn('mt-3 text-base leading-relaxed md:text-[17px]', light ? 'text-hero-text' : 'text-ink-soft')}>
+          <p className={cn('mt-3 max-w-xl text-[15px] leading-[1.7] md:text-base', light ? 'text-hero-text' : 'text-ink-soft')}>
             {description}
           </p>
         )}
@@ -37,7 +37,7 @@ export function SectionHeader({
       {action ?? (actionHref && (
         <Link
           to={actionHref}
-          className="inline-flex items-center gap-1 text-sm font-semibold text-ink no-underline hover:text-ted-blue"
+          className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-lg border border-line bg-surface px-3.5 py-2 text-sm font-semibold text-ink no-underline transition-colors hover:border-ted-sky/40 hover:text-ted-blue sm:self-auto"
         >
           {actionLabel} <ArrowRight className="h-4 w-4" />
         </Link>

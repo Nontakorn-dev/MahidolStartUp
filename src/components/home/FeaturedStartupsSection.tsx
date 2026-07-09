@@ -77,7 +77,7 @@ export function FeaturedStartupsSection({
   const isEmpty = items.length === 0
 
   return (
-    <section className="section-pad bg-surface" id="featured">
+    <section className="section-pad border-y border-line bg-ted-mist/50" id="featured">
       <div className="wrap">
         <SectionHeader
           eyebrow="MSC Connect"
@@ -87,16 +87,18 @@ export function FeaturedStartupsSection({
           actionLabel="ดูทั้งหมด"
         />
 
-        <CategoryFilterBar
-          categories={categories}
-          active={filter}
-          onChange={setFilter}
-        />
+        {categories.length > 0 && (
+          <CategoryFilterBar
+            categories={categories}
+            active={filter}
+            onChange={setFilter}
+          />
+        )}
 
         {isEmpty ? (
-          <ListingEmptyState message="ยังไม่มี Startup ในหมวดนี้ตอนนี้ — กลับมาดูใหม่เร็ว ๆ นี้" />
+          <ListingEmptyState message="Coming soon" />
         ) : (
-          <ListingCardGrid className="listing-grid--4">
+          <ListingCardGrid>
             {showPosts
               ? filteredPosts.map((post) => (
                   <ListingCard
