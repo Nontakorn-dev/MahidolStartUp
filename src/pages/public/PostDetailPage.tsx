@@ -37,7 +37,7 @@ export function PostDetailPage() {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center">
         <p className="text-gray-500">ไม่พบบทความนี้</p>
-        <Link to="/posts" className="mt-4 inline-block text-mu-gold hover:underline">กลับไปหน้าข่าวสาร</Link>
+        <Link to="/news" className="mt-4 inline-block font-semibold text-ink hover:underline">กลับไปหน้าข่าวสาร</Link>
       </div>
     )
   }
@@ -61,7 +61,7 @@ export function PostDetailPage() {
         <RichTextContent content={post.content} />
       </Card>
 
-      <Link to="/posts" className="mt-8 inline-block text-mu-gold hover:underline">← กลับไปหน้าข่าวสาร</Link>
+      <Link to="/news" className="mt-8 inline-block font-semibold text-ink hover:underline">← กลับไปหน้าข่าวสาร</Link>
     </article>
   )
 }

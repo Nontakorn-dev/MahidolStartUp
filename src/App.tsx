@@ -30,6 +30,13 @@ import { PostEditPage } from './pages/admin/PostEditPage'
 import { EventsAdminPage } from './pages/admin/EventsAdminPage'
 import { EventEditPage } from './pages/admin/EventEditPage'
 import { UsersAdminPage } from './pages/admin/UsersAdminPage'
+import { StartupsAdminPage } from './pages/admin/StartupsAdminPage'
+import { PartnersAdminPage } from './pages/admin/PartnersAdminPage'
+import { RequestsAdminPage } from './pages/admin/RequestsAdminPage'
+
+import { StartupRegisterPage } from './pages/register/StartupRegisterPage'
+import { PartnerRegisterPage } from './pages/register/PartnerRegisterPage'
+import { RegisterSuccessPage } from './pages/register/RegisterSuccessPage'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -50,6 +57,11 @@ export default function App() {
               <Route path="events/:slug" element={<EventDetailPage />} />
               <Route path="posts" element={<PostsPage />} />
               <Route path="posts/:slug" element={<PostDetailPage />} />
+              <Route path="news" element={<PostsPage />} />
+              <Route path="news/:slug" element={<PostDetailPage />} />
+              <Route path="register/startup" element={<StartupRegisterPage />} />
+              <Route path="register/partner" element={<PartnerRegisterPage />} />
+              <Route path="register/success" element={<RegisterSuccessPage />} />
               <Route path="match" element={<MatchHubPage />} />
               <Route path="match/discover" element={<DiscoverPage />} />
               <Route path="match/startup/:id" element={<StartupDetailPage />} />
@@ -87,6 +99,9 @@ export default function App() {
                   </RoleRoute>
                 }
               />
+              <Route path="startups" element={<StartupsAdminPage />} />
+              <Route path="partners" element={<PartnersAdminPage />} />
+              <Route path="requests" element={<RequestsAdminPage />} />
             </Route>
           </Routes>
         </BrowserRouter>

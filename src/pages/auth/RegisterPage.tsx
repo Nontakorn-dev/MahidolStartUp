@@ -38,7 +38,7 @@ export function RegisterPage() {
       <div className="flex min-h-[70vh] items-center justify-center px-4">
         <Card className="text-center">
           <p className="text-lg font-semibold text-green-600">สมัครสำเร็จ!</p>
-          <p className="mt-2 text-sm text-gray-500">กำลังพาไปหน้าเข้าสู่ระบบ...</p>
+          <p className="mt-2 text-sm text-ink-soft">กำลังพาไปหน้าเข้าสู่ระบบ...</p>
         </Card>
       </div>
     )
@@ -47,8 +47,8 @@ export function RegisterPage() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
-        <h1 className="mb-1 text-2xl font-bold text-mu-navy">สมัครสมาชิก</h1>
-        <p className="mb-6 text-sm text-gray-500">เข้าร่วม MU Startup Hub</p>
+        <h1 className="mb-1 font-heading text-2xl text-ink">สมัครสมาชิก</h1>
+        <p className="mb-6 text-sm text-ink-soft">เข้าร่วม MU Startup Hub</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input label="ชื่อ-นามสกุล" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
@@ -66,8 +66,8 @@ export function RegisterPage() {
           </Button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-500">
-          มีบัญชีแล้ว? <Link to="/login" className="text-mu-gold hover:underline">เข้าสู่ระบบ</Link>
+        <p className="mt-4 text-center text-sm text-ink-soft">
+          มีบัญชีแล้ว? <Link to="/login" className="font-semibold text-ink no-underline hover:underline">เข้าสู่ระบบ</Link>
         </p>
       </Card>
     </div>

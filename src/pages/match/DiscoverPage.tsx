@@ -54,13 +54,13 @@ export function DiscoverPage() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6">
-      <h1 className="mb-6 text-3xl font-bold text-mu-navy">ค้นหา Partner</h1>
+      <h1 className="mb-6 font-heading text-3xl text-ink">ค้นหา Partner</h1>
 
       <div className="mb-6 flex gap-2">
         <button
           onClick={() => setTab('startup')}
           className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-            tab === 'startup' ? 'bg-mu-navy text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            tab === 'startup' ? 'bg-ink text-white' : 'bg-flow-bg text-ink-soft hover:bg-line/60 hover:text-ink'
           }`}
         >
           <Rocket className="h-4 w-4" /> Startup
@@ -68,7 +68,7 @@ export function DiscoverPage() {
         <button
           onClick={() => setTab('mentor')}
           className={`flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-            tab === 'mentor' ? 'bg-mu-navy text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+            tab === 'mentor' ? 'bg-ink text-white' : 'bg-flow-bg text-ink-soft hover:bg-line/60 hover:text-ink'
           }`}
         >
           <GraduationCap className="h-4 w-4" /> Mentor / Partner
@@ -95,9 +95,9 @@ export function DiscoverPage() {
         </div>
       ) : tab === 'startup' ? (
         startups.length === 0 ? (
-          <Card className="py-16 text-center text-gray-500">
-            <Search className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-            <p>ยังไม่มี Startup profile — <Link to="/match/startup/new" className="text-mu-gold hover:underline">สร้างโปรไฟล์แรก</Link></p>
+          <Card className="py-16 text-center text-ink-soft">
+            <Search className="mx-auto mb-3 h-10 w-10 text-line" />
+            <p>ยังไม่มี Startup profile — <Link to="/match/startup/new" className="font-semibold text-ink hover:underline">สร้างโปรไฟล์แรก</Link></p>
           </Card>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -109,8 +109,8 @@ export function DiscoverPage() {
                       {s.name[0]}
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-semibold text-mu-navy">{s.name}</h3>
-                      {s.tagline && <p className="mt-0.5 truncate text-sm text-gray-500">{s.tagline}</p>}
+                      <h3 className="font-semibold text-ink">{s.name}</h3>
+                      {s.tagline && <p className="mt-0.5 truncate text-sm text-ink-soft">{s.tagline}</p>}
                       <div className="mt-2 flex flex-wrap gap-1">
                         <Badge variant="gold">{STAGE_LABELS[s.stage]}</Badge>
                         {s.profiles?.affiliation && (
@@ -126,17 +126,17 @@ export function DiscoverPage() {
         )
       ) : (
         mentors.length === 0 ? (
-          <Card className="py-16 text-center text-gray-500">
-            <GraduationCap className="mx-auto mb-3 h-10 w-10 text-gray-300" />
-            <p>ยังไม่มี Mentor profile — <Link to="/match/mentor/new" className="text-mu-gold hover:underline">สร้างโปรไฟล์แรก</Link></p>
+          <Card className="py-16 text-center text-ink-soft">
+            <GraduationCap className="mx-auto mb-3 h-10 w-10 text-line" />
+            <p>ยังไม่มี Mentor profile — <Link to="/match/mentor/new" className="font-semibold text-ink hover:underline">สร้างโปรไฟล์แรก</Link></p>
           </Card>
         ) : (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {mentors.map((m) => (
               <Link key={m.id} to={`/match/mentor/${m.id}`}>
                 <Card hover>
-                  <h3 className="font-semibold text-mu-navy">{m.profiles?.full_name}</h3>
-                  {m.title && <p className="mt-1 text-sm text-gray-500">{m.title}</p>}
+                  <h3 className="font-semibold text-ink">{m.profiles?.full_name}</h3>
+                  {m.title && <p className="mt-1 text-sm text-ink-soft">{m.title}</p>}
                   <div className="mt-2 flex flex-wrap gap-1">
                     {m.expertise.slice(0, 3).map((e) => <Badge key={e}>{e}</Badge>)}
                   </div>

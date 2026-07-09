@@ -1,90 +1,70 @@
 import { Link } from 'react-router-dom'
-import { Rocket, GraduationCap, Search } from 'lucide-react'
-import { Card } from '../../components/ui/Card'
-import { useAuth } from '../../contexts/AuthContext'
+import { Rocket, Handshake, Search, Sparkles } from 'lucide-react'
+import { PageHero } from '../../components/ui/PageHero'
+import { SectionHeader } from '../../components/ui/SectionHeader'
+import { FeaturedStartupsSection } from '../../components/home/FeaturedStartupsSection'
 
 export function MatchHubPage() {
-  const { user } = useAuth()
-
   return (
     <div>
-      <section className="bg-ink py-16 text-paper">
-        <div className="wrap text-center">
-          <div className="eyebrow">Business Matching</div>
-          <h1 className="mt-2 font-heading text-3xl md:text-4xl">Match Hub</h1>
-          <p className="mx-auto mt-4 max-w-2xl text-hero-text">
-            แพลตฟอร์ม business matching ของ Mahidol Startup Club
-            เชื่อม startup, mentor, investor และ partner ทั้งในมหิดลและภายนอก
-          </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Link
-              to="/match/discover"
-              className="inline-flex items-center gap-2 rounded-md bg-gold px-5 py-3 text-sm font-medium text-ink no-underline hover:bg-gold-tint"
-            >
-              <Search className="h-4 w-4" /> ค้นหา Partner
-            </Link>
-            {user ? (
-              <Link
-                to="/match/connections"
-                className="inline-block rounded-md border border-[#3E4E6B] px-5 py-3 text-sm text-[#EDEFF3] no-underline hover:border-gold"
-              >
-                การเชื่อมต่อของฉัน
-              </Link>
-            ) : (
-              <Link
-                to="/register"
-                className="inline-block rounded-md border border-[#3E4E6B] px-5 py-3 text-sm text-[#EDEFF3] no-underline hover:border-gold"
-              >
-                สมัครเพื่อเริ่มต้น
-              </Link>
-            )}
-          </div>
+      <PageHero
+        eyebrow="MSC Connect"
+        title={
+          <>
+            เชื่อมไอเดียของคุณ
+            <br />
+            เข้ากับ<span className="text-gold"> คนที่ใช่</span>
+          </>
+        }
+        description="จากห้องเรียนสู่ตลาดจริง — Mahidol Startup Club ช่วยจับคู่ Startup กับ Mentor, นักลงทุน และ Partner ตลอดทั้งปี ไม่ใช่แค่ช่วง Demo Day"
+      >
+        <div className="flex flex-wrap gap-3">
+          <Link to="/register/startup" className="btn-accent">
+            <Rocket className="h-4 w-4" /> ฉันมี Startup
+          </Link>
+          <Link to="/register/partner" className="btn-secondary">
+            <Handshake className="h-4 w-4" /> ฉันอยากเป็น Mentor/Partner
+          </Link>
         </div>
-      </section>
+      </PageHero>
 
-      <section className="wrap py-16">
-        <div className="mb-10 text-center">
-          <div className="eyebrow">เริ่มต้นอย่างไร</div>
-          <h2 className="mt-2 font-heading text-2xl text-ink">สี่ขั้นตอนสู่การเชื่อมต่อ</h2>
-        </div>
-        <div className="grid gap-px border border-line bg-line md:grid-cols-4">
+      <section className="wrap section-pad !pt-12">
+        <SectionHeader
+          eyebrow="ทำไมต้อง MSC Connect"
+          title="ความต้องการมีจริง — ecosystem มหิดลพิสูจน์แล้ว"
+          description="iNT มหิดลจัด Business Matching และ Incubation Program อย่างต่อเนื่อง (เช่น MU InnoMatch, Mahidol Incubation Program) ชมรมเราทำให้กระบวนการนี้เกิดได้ตลอดปีในระดับนักศึกษา"
+        />
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { step: '1', title: 'สร้างโปรไฟล์', desc: 'ลงทะเบียนและสร้าง Startup หรือ Mentor profile' },
-            { step: '2', title: 'ค้นหา & Filter', desc: 'ค้นหาคนที่ fit กับ industry และ stage' },
-            { step: '3', title: 'เชื่อมต่อ', desc: 'ส่งคำขอเชื่อมต่อพร้อมข้อความ' },
-            { step: '4', title: 'ตอบรับ', desc: 'ดูข้อมูลติดต่อหลัง accept' },
+            { step: '01', title: 'กรอกฟอร์ม', desc: 'ไม่ต้อง login — ใช้เวลาไม่เกิน 5 นาที' },
+            { step: '02', title: 'ทีมตรวจสอบ', desc: 'Core Team ดูข้อมูลและค้นหา Partner ที่ fit' },
+            { step: '03', title: 'จับคู่', desc: 'แนะนำตัวให้ทั้งสองฝ่ายภายใน 7 วัน' },
+            { step: '04', title: 'Follow-up', desc: 'ติดตามผลและปรับปรุงการจับคู่' },
           ].map((item) => (
-            <div key={item.step} className="bg-paper px-6 py-8 text-center">
-              <div className="mx-auto mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-gold-tint font-heading text-lg font-semibold text-ink">
-                {item.step}
-              </div>
-              <h3 className="font-heading text-ink">{item.title}</h3>
-              <p className="mt-2 text-sm text-muted">{item.desc}</p>
+            <div key={item.step} className="card-elevated p-6 text-center">
+              <span className="font-mono text-3xl font-medium text-gold/40">{item.step}</span>
+              <h3 className="mt-3 font-heading text-ink">{item.title}</h3>
+              <p className="mt-2 text-sm text-ink-soft">{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="bg-flow-bg py-16">
-        <div className="wrap">
-          <div className="mb-10 text-center">
-            <div className="eyebrow">สร้างโปรไฟล์</div>
-            <h2 className="mt-2 font-heading text-2xl text-ink">เลือกประเภทของคุณ</h2>
-          </div>
-          <div className="mx-auto grid max-w-2xl gap-4 sm:grid-cols-2">
-            <Link to={user ? '/match/startup/new' : '/login'} className="no-underline">
-              <Card hover className="text-center">
-                <Rocket className="mx-auto mb-3 h-9 w-9 text-gold" />
-                <h3 className="font-heading text-ink">Startup Profile</h3>
-                <p className="mt-1 text-sm text-muted">สำหรับผู้มีไอเดียหรือโปรเจกต์ startup</p>
-              </Card>
+      <FeaturedStartupsSection actionHref="/news" />
+
+      <section className="bg-ted-light/60 section-pad">
+        <div className="wrap text-center">
+          <Sparkles className="mx-auto mb-4 h-10 w-10 text-gold" />
+          <h2 className="font-heading text-2xl text-ink">พร้อมเริ่มต้นแล้วหรือยัง?</h2>
+          <p className="mx-auto mt-3 max-w-md text-ink-soft">
+            ไม่ว่าคุณจะมี Startup หรืออยากช่วยเหลือทีมนักศึกษา — เริ่มได้วันนี้
+          </p>
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Link to="/register/startup" className="btn-primary">
+              เริ่มต้นหาพาร์ทเนอร์ของคุณ
             </Link>
-            <Link to={user ? '/match/mentor/new' : '/login'} className="no-underline">
-              <Card hover className="text-center">
-                <GraduationCap className="mx-auto mb-3 h-9 w-9 text-gold" />
-                <h3 className="font-heading text-ink">Mentor / Partner</h3>
-                <p className="mt-1 text-sm text-muted">สำหรับ mentor, investor หรือ industry partner</p>
-              </Card>
+            <Link to="/match/discover" className="btn-secondary">
+              <Search className="h-4 w-4" /> ค้นหา Partner (สมาชิก)
             </Link>
           </div>
         </div>

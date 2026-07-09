@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react'
-import { Upload, Image as ImageIcon } from 'lucide-react'
+import { Upload } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../contexts/AuthContext'
 import { Button } from '../ui/Button'
@@ -91,8 +91,10 @@ export function MediaPicker({ value, onChange, label }: MediaPickerProps) {
 
 export function ImagePlaceholder({ className }: { className?: string }) {
   return (
-    <div className={`flex items-center justify-center bg-gradient-to-br from-mu-navy/5 to-mu-gold/10 ${className}`}>
-      <ImageIcon className="h-12 w-12 text-mu-gold/40" />
+    <div className={`flex items-center justify-center bg-gradient-to-br from-ted-light to-gold-tint/40 ${className}`}>
+      <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/60 text-2xl font-bold text-ted-sky/40">
+        MU
+      </div>
     </div>
   )
 }

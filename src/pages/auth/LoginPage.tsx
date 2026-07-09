@@ -31,8 +31,8 @@ export function LoginPage() {
   return (
     <div className="flex min-h-[70vh] items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
-        <h1 className="mb-1 text-2xl font-bold text-mu-navy">เข้าสู่ระบบ</h1>
-        <p className="mb-6 text-sm text-gray-500">MU Startup Hub</p>
+        <h1 className="mb-1 font-heading text-2xl text-ink">เข้าสู่ระบบ</h1>
+        <p className="mb-6 text-sm text-ink-soft">MU Startup Hub</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input label="อีเมล" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -43,8 +43,8 @@ export function LoginPage() {
           </Button>
         </form>
 
-        <p className="mt-4 text-center text-sm text-gray-500">
-          ยังไม่มีบัญชี? <Link to="/register" className="text-mu-gold hover:underline">สมัครสมาชิก</Link>
+        <p className="mt-4 text-center text-sm text-ink-soft">
+          ยังไม่มีบัญชี? <Link to="/register" className="font-semibold text-ink no-underline hover:underline">สมัครสมาชิก</Link>
         </p>
       </Card>
     </div>

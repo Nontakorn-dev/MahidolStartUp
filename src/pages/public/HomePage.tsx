@@ -1,42 +1,54 @@
 import { Link } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { Globe, Users, Newspaper, ArrowRight, Sparkles } from 'lucide-react'
 import { supabase } from '../../lib/supabase'
 import { HomeHeroNav } from '../../components/layout/Navbar'
+import { TopBar } from '../../components/layout/TopBar'
 import { HomeCtaFooter } from '../../components/layout/Footer'
 import { NetworkDiagram } from '../../components/home/NetworkDiagram'
-import { formatDate, tiptapToText, excerpt } from '../../lib/utils'
-import type { Post, Event } from '../../types'
+import { SectionHeader } from '../../components/ui/SectionHeader'
+import { EventCardGrid } from '../../components/ui/EventCard'
+import { NewsCardGrid } from '../../components/ui/NewsCard'
+import { FeaturedStartupsSection } from '../../components/home/FeaturedStartupsSection'
+import { getUpcomingEvents } from '../../data/events'
+import type { Post } from '../../types'
 
 const stats = [
-  { num: '100+', lbl: 'โปรไฟล์ startup / mentor เป้าหมาย 6 เดือนแรก' },
+  { num: '100+', lbl: 'โปรไฟล์ startup / mentor' },
   { num: '30+', lbl: 'การจับคู่ที่สำเร็จ' },
-  { num: '30%', lbl: 'สัดส่วนโปรไฟล์จากภายนอกมหิดล' },
-  { num: '80%', lbl: 'กิจกรรมที่ลงทะเบียนผ่านแพลตฟอร์ม' },
+  { num: '30%', lbl: 'โปรไฟล์จากภายนอกมหิดล' },
+  { num: '80%', lbl: 'ลงทะเบียนผ่านแพลตฟอร์ม' },
 ]
 
 const pillars = [
   {
+    icon: Globe,
     tag: 'Public hub',
     title: 'หน้าเว็บชมรม',
-    desc: 'รวมข่าว กิจกรรม และช่องทางติดต่อไว้ในที่เดียว ให้คนนอกมหิดลตามงานชมรมได้ง่ายกว่าไล่ดูในเฟซบุ๊กหรือไลน์',
+    desc: 'รวมข่าว กิจกรรม และช่องทางติดต่อไว้ในที่เดียว ให้คนนอกมหิดลตามงานชมรมได้ง่าย',
+    color: 'bg-ted-light text-ted-sky',
   },
   {
+    icon: Newspaper,
     tag: 'PR CMS',
     title: 'โพสต์เองได้ ไม่ต้องรอ dev',
-    desc: 'ทีม PR เข้าระบบเขียนข่าว อัปโหลดรูป และเผยแพร่ได้ภายในไม่กี่นาที พร้อมดูตัวอย่างก่อนลงจริง',
+    desc: 'ทีม PR เขียนข่าว อัปโหลดรูป และเผยแพร่ได้ภายในไม่กี่นาที พร้อมดูตัวอย่างก่อนลงจริง',
+    color: 'bg-gold-tint text-gold-deep',
   },
   {
+    icon: Users,
     tag: 'Match hub',
     title: 'จับคู่ทางธุรกิจตลอดปี',
-    desc: 'สตาร์ตอัพ นักศึกษา เมนเทอร์ และนักลงทุน สร้างโปรไฟล์ ค้นหากันได้ และส่งคำขอเชื่อมต่ออย่างมีโครงสร้าง',
+    desc: 'สตาร์ตอัพ เมนเทอร์ และนักลงทุน สร้างโปรไฟล์ ค้นหากัน และส่งคำขอเชื่อมต่ออย่างมีโครงสร้าง',
+    color: 'bg-ink/5 text-ink',
   },
 ]
 
 const flowSteps = [
-  { title: '1. สร้างโปรไฟล์', desc: 'ระบุสิ่งที่มองหาและสิ่งที่ให้ได้' },
-  { title: '2. ค้นหา / กรอง', desc: 'ตามประเภท อุตสาหกรรม หรือสังกัด' },
-  { title: '3. ส่งคำขอ', desc: 'พร้อมข้อความสั้น ๆ ถึงอีกฝ่าย' },
-  { title: '4. ตอบรับ', desc: 'เห็นช่องทางติดต่อกันทันที' },
+  { step: '01', title: 'สร้างโปรไฟล์', desc: 'ระบุสิ่งที่มองหาและสิ่งที่ให้ได้' },
+  { step: '02', title: 'ค้นหา / กรอง', desc: 'ตามประเภท อุตสาหกรรม หรือสังกัด' },
+  { step: '03', title: 'ส่งคำขอ', desc: 'พร้อมข้อความสั้น ๆ ถึงอีกฝ่าย' },
+  { step: '04', title: 'ตอบรับ', desc: 'เห็นช่องทางติดต่อกันทันที' },
 ]
 
 const programs = [
@@ -60,69 +72,60 @@ export function HomePage() {
     },
   })
 
-  const { data: events = [] } = useQuery({
-    queryKey: ['events-upcoming'],
-    queryFn: async () => {
-      const { data } = await supabase
-        .from('events')
-        .select('*')
-        .eq('status', 'published')
-        .gte('start_at', new Date().toISOString())
-        .order('start_at', { ascending: true })
-        .limit(3)
-      return (data ?? []) as Event[]
-    },
-  })
+  const events = getUpcomingEvents(4)
 
   return (
     <div>
       {/* Hero */}
-      <header className="overflow-hidden bg-ink text-paper">
-        <div className="wrap pt-16">
+      <header className="relative overflow-hidden border-b border-line bg-surface">
+        <TopBar />
+        <div className="wrap relative">
           <HomeHeroNav />
 
-          <div className="grid items-center gap-10 pb-10 md:grid-cols-[1.1fr_1fr]">
-            <div>
+          <div className="grid items-center gap-5 pb-10 md:grid-cols-2 md:gap-12 md:pb-12 lg:pb-14">
+            {/* SVG ขึ้นก่อนบนมือถือ — desktop อยู่ขวา */}
+            <div className="order-1 -mx-2 animate-fade-up md:order-2 md:mx-0">
+              <NetworkDiagram />
+            </div>
+
+            <div className="order-2 animate-fade-up animate-delay-1 text-center md:order-1 md:text-left">
               <div className="eyebrow">Est. 2018 · Supported by iNT, Mahidol University</div>
-              <h1 className="mt-4 font-heading text-[32px] leading-[1.28] text-white md:text-[44px]">
+              <h1 className="mt-3 font-heading text-[clamp(1.65rem,6vw,2.75rem)] leading-[1.3] text-ink md:mt-4">
                 เครือข่ายที่ทำให้ไอเดีย
                 <br />
-                กลายเป็น<span className="text-gold"> สตาร์ตอัพจริง</span>
+                กลายเป็น<span className="text-gold-deep"> สตาร์ตอัพจริง</span>
               </h1>
-              <p className="mt-5 max-w-[440px] text-base text-hero-text">
+              <p className="mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-ink-soft md:mx-0 md:mt-5 md:text-[17px]">
                 พื้นที่กลางของ Mahidol Startup Club ที่รวมข่าวสาร กิจกรรม และการจับคู่ทางธุรกิจไว้ในที่เดียว
-                — เปิดให้ทั้งคนในมหิดลและพันธมิตรภายนอกเชื่อมต่อกันได้ตลอดปี ไม่ใช่แค่ในวันงาน
+                — เปิดให้ทั้งคนในมหิดลและพันธมิตรภายนอกเชื่อมต่อกันได้ตลอดปี
               </p>
-              <div className="mt-7 flex flex-wrap gap-3">
-                <Link
-                  to="/match/startup/new"
-                  className="inline-block rounded-md bg-gold px-5 py-3 text-sm font-medium text-ink no-underline hover:bg-gold-tint"
-                >
-                  สร้างโปรไฟล์ของคุณ
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center md:mt-7 md:justify-start">
+                <Link to="/register/startup" className="btn-accent justify-center">
+                  <Sparkles className="h-4 w-4" /> ฉันมี Startup
                 </Link>
-                <a
-                  href="#programs"
-                  className="inline-block rounded-md border border-[#3E4E6B] px-5 py-3 text-sm font-medium text-[#EDEFF3] no-underline hover:border-gold hover:text-gold"
-                >
-                  ดูกิจกรรมทั้งหมด
-                </a>
+                <Link to="/register/partner" className="btn-secondary justify-center">
+                  ฉันอยากเป็น Mentor/Partner
+                </Link>
               </div>
             </div>
-            <NetworkDiagram />
           </div>
         </div>
 
-        {/* Stats */}
-        <div className="border-t border-ink-border">
+        {/* Stats bar */}
+        <div className="border-t border-line bg-flow-bg">
           <div className="wrap !px-0">
-            <div className="grid grid-cols-2 md:grid-cols-4">
+            <div className="grid grid-cols-2 lg:grid-cols-4">
               {stats.map((s, i) => (
                 <div
                   key={s.num}
-                  className={`px-8 py-5 ${i < stats.length - 1 ? 'border-r border-ink-border max-md:[&:nth-child(odd)]:border-r max-md:[&:nth-child(even)]:border-r-0 md:border-r' : ''}`}
+                  className={`px-5 py-5 md:px-8 md:py-6 ${
+                    i < stats.length - 1
+                      ? 'border-b border-line lg:border-b-0 lg:border-r'
+                      : ''
+                  } ${i % 2 === 0 ? 'border-r border-line lg:border-r' : ''} ${i === 2 ? 'lg:border-r' : ''}`}
                 >
-                  <div className="font-heading text-[28px] font-semibold text-gold">{s.num}</div>
-                  <div className="mt-1 text-xs text-ink-muted">{s.lbl}</div>
+                  <div className="font-heading text-2xl font-semibold text-gold-deep md:text-3xl">{s.num}</div>
+                  <div className="mt-1 text-xs font-medium leading-snug text-ink-soft md:text-sm">{s.lbl}</div>
                 </div>
               ))}
             </div>
@@ -131,140 +134,117 @@ export function HomePage() {
       </header>
 
       {/* Pillars */}
-      <section className="py-[88px]" id="pillars">
+      <section className="section-pad bg-surface" id="pillars">
         <div className="wrap">
-          <div className="mb-12 max-w-[560px]">
-            <div className="eyebrow">สามส่วนหลัก</div>
-            <h2 className="mt-2.5 font-heading text-[28px] text-ink">แพลตฟอร์มเดียว ครบทั้งข่าวสารและเครือข่าย</h2>
-            <p className="mt-3 text-[15px] text-muted">
-              ออกแบบมาให้ทีม PR โพสต์เองได้ และให้การจับคู่ธุรกิจเกิดขึ้นได้ทุกวัน ไม่ใช่แค่ในงานอีเวนต์
-            </p>
-          </div>
-          <div className="grid gap-px border border-line bg-line md:grid-cols-3">
+          <SectionHeader
+            eyebrow="สามส่วนหลัก"
+            title="แพลตฟอร์มเดียว ครบทั้งข่าวสารและเครือข่าย"
+            description="ออกแบบมาให้ทีม PR โพสต์เองได้ และให้การจับคู่ธุรกิจเกิดขึ้นได้ทุกวัน ไม่ใช่แค่ในงานอีเวนต์"
+          />
+          <div className="grid gap-5 md:grid-cols-3">
             {pillars.map((p) => (
-              <div key={p.tag} className="bg-paper px-7 py-8">
-                <div className="font-mono text-[11px] uppercase tracking-wide text-gold-deep">{p.tag}</div>
-                <h3 className="mt-3.5 font-heading text-[19px] text-ink">{p.title}</h3>
-                <p className="mt-2.5 text-sm text-muted">{p.desc}</p>
-              </div>
+              <article key={p.tag} className="card-elevated group p-6 md:p-8">
+                <div className={`mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl ${p.color}`}>
+                  <p.icon className="h-6 w-6" />
+                </div>
+                <div className="font-mono text-[10px] uppercase tracking-widest text-ink-soft">{p.tag}</div>
+                <h3 className="mt-2 font-heading text-lg text-ink md:text-xl">{p.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-ink-soft">{p.desc}</p>              </article>
             ))}
           </div>
         </div>
       </section>
 
       {/* Matching flow */}
-      <section className="bg-flow-bg py-[88px]" id="matching">
+      <section className="section-pad bg-ted-light/60" id="matching">
         <div className="wrap">
-          <div className="mb-12 max-w-[560px]">
-            <div className="eyebrow">กลไกการจับคู่</div>
-            <h2 className="mt-2.5 font-heading text-[28px] text-ink">ลดข้อความทักไปแบบไม่มีจุดหมาย</h2>
-            <p className="mt-3 text-[15px] text-muted">
-              ทุกโปรไฟล์ต้องระบุชัดว่า &quot;กำลังมองหาอะไร&quot; และ &quot;ให้อะไรได้&quot; ก่อนส่งคำขอเชื่อมต่อ
-              — ข้อมูลติดต่อจะแสดงก็ต่อเมื่อทั้งสองฝ่ายตอบรับ
-            </p>
-          </div>
-          <div className="flex flex-wrap items-center gap-0">
+          <SectionHeader
+            eyebrow="กลไกการจับคู่"
+            title="ลดข้อความทักไปแบบไม่มีจุดหมาย"
+            description='ทุกโปรไฟล์ต้องระบุชัดว่า "กำลังมองหาอะไร" และ "ให้อะไรได้" ก่อนส่งคำขอเชื่อมต่อ — ข้อมูลติดต่อจะแสดงก็ต่อเมื่อทั้งสองฝ่ายตอบรับ'
+          />
+
+          <div className="flow-stepper gap-3 md:gap-0">
             {flowSteps.map((step, i) => (
-              <div key={step.title} className="flex flex-1 items-center max-md:min-w-full max-md:mb-2">
-                <div className="min-w-[150px] flex-1 rounded-lg border border-line bg-paper px-5 py-4 text-[13.5px]">
-                  <b className="mb-1 block font-heading text-sm">{step.title}</b>
-                  {step.desc}
+              <div key={step.step} className="flex flex-1 items-stretch">
+                <div className="card-elevated relative flex flex-1 flex-col p-5 md:rounded-none md:border-r-0 md:first:rounded-l-2xl md:last:rounded-r-2xl md:[&:not(:last-child)]:border-r-0">
+                  <span className="font-mono text-2xl font-medium text-gold/40">{step.step}</span>
+                  <b className="mt-2 block font-heading text-sm text-ink md:text-base">{step.title}</b>
+                  <p className="mt-1 flex-1 text-sm text-ink-soft">{step.desc}</p>
                 </div>
                 {i < flowSteps.length - 1 && (
-                  <span className="hidden shrink-0 px-3.5 text-lg text-gold-deep md:inline">→</span>
+                  <div className="hidden shrink-0 items-center px-2 text-gold-deep md:flex">
+                    <ArrowRight className="h-5 w-5" />
+                  </div>
                 )}
               </div>
             ))}
           </div>
-          <div className="mt-8">
-            <Link
-              to="/match/discover"
-              className="inline-block rounded-md bg-ink px-5 py-3 text-sm font-medium text-paper no-underline hover:bg-ink-soft"
-            >
-              เริ่มค้นหา Partner →
+
+          <div className="mt-8 text-center md:text-left">
+            <Link to="/match/discover" className="btn-secondary">
+              เริ่มค้นหา Partner <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
       </section>
 
       {/* Programs */}
-      <section className="py-[88px]" id="programs">
+      <section className="section-pad" id="programs">
         <div className="wrap">
-          <div className="mb-12 max-w-[560px]">
-            <div className="eyebrow">โครงการร่วมกับ iNT</div>
-            <h2 className="mt-2.5 font-heading text-[28px] text-ink">สนามจริงสำหรับทดสอบไอเดีย</h2>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
+          <SectionHeader
+            eyebrow="โครงการร่วมกับ iNT"
+            title="สนามจริงสำหรับทดสอบไอเดีย"
+          />
+          <div className="grid gap-4 sm:grid-cols-2">
             {programs.map((p) => (
-              <div key={p.title} className="border-l-[3px] border-gold py-1.5 pl-[18px]">
-                <b className="block font-heading text-[15px] text-ink">{p.title}</b>
-                <span className="text-[13px] text-muted">{p.desc}</span>
+              <div
+                key={p.title}
+                className="card-elevated flex gap-4 p-5 md:p-6"
+              >
+                <div className="mt-1 h-full w-1 shrink-0 rounded-full bg-gradient-to-b from-gold to-ted-sky" />
+                <div>
+                  <b className="block font-heading text-base text-ink md:text-lg">{p.title}</b>
+                  <span className="mt-1 block text-sm text-ink-soft">{p.desc}</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Live events */}
-      <section className="border-t border-line bg-paper py-[88px]" id="events">
+      {/* Events */}
+      <section className="section-pad bg-surface" id="events">
         <div className="wrap">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <div className="eyebrow">กิจกรรมล่าสุด</div>
-              <h2 className="mt-2 font-heading text-[28px] text-ink">ที่กำลังจะมา</h2>
-            </div>
-            <Link to="/events" className="text-sm text-gold-deep no-underline hover:text-gold">ดูทั้งหมด →</Link>
-          </div>
-          {events.length === 0 ? (
-            <p className="text-sm text-muted">ยังไม่มีกิจกรรมที่กำลังจะมา — ติดตามข่าวสารเร็ว ๆ นี้</p>
-          ) : (
-            <div className="grid gap-px border border-line bg-line md:grid-cols-3">
-              {events.map((event) => (
-                <Link
-                  key={event.id}
-                  to={`/events/${event.slug}`}
-                  className="block bg-paper px-6 py-6 no-underline transition-colors hover:bg-gold-tint/30"
-                >
-                  <div className="font-mono text-[11px] uppercase tracking-wide text-gold-deep">
-                    {formatDate(event.start_at)}
-                  </div>
-                  <h3 className="mt-2 font-heading text-base text-ink">{event.title}</h3>
-                  {event.location && <p className="mt-1 text-[13px] text-muted">{event.location}</p>}
-                </Link>
-              ))}
-            </div>
-          )}
+          <SectionHeader
+            eyebrow="กิจกรรม & โครงการ"
+            title="เปิดรับสมัครแล้ว"
+            description="Talent Accelerator, Startup Thailand League, TED Youth และ Blue Horizon"
+            actionHref="/events"
+            actionLabel="ดูทั้งหมด"
+          />
+          <EventCardGrid events={events} />
         </div>
       </section>
 
-      {/* Live posts */}
-      <section className="border-t border-line bg-flow-bg py-[88px]">
+      <FeaturedStartupsSection actionHref="/news" />
+
+      {/* Posts */}
+      <section className="section-pad bg-flow-bg">
         <div className="wrap">
-          <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <div className="eyebrow">ข่าวสาร</div>
-              <h2 className="mt-2 font-heading text-[28px] text-ink">จากทีม PR</h2>
-            </div>
-            <Link to="/posts" className="text-sm text-gold-deep no-underline hover:text-gold">ดูทั้งหมด →</Link>
-          </div>
+          <SectionHeader
+            eyebrow="ข่าวสารประชาสัมพันธ์"
+            title="อัปเดตจากทีม PR"
+            description="ข่าวสาร กิจกรรม และเรื่องราวความสำเร็จจากชมรม"
+            actionHref="/news"
+          />
           {posts.length === 0 ? (
-            <p className="text-sm text-muted">ยังไม่มีข่าวสาร</p>
-          ) : (
-            <div className="grid gap-px border border-line bg-line md:grid-cols-3">
-              {posts.map((post) => (
-                <Link
-                  key={post.id}
-                  to={`/posts/${post.slug}`}
-                  className="block bg-paper px-6 py-6 no-underline transition-colors hover:bg-gold-tint/30"
-                >
-                  {post.category && (
-                    <div className="font-mono text-[11px] uppercase tracking-wide text-gold-deep">{post.category}</div>
-                  )}
-                  <h3 className="mt-2 font-heading text-base text-ink">{post.title}</h3>
-                  <p className="mt-2 text-[13px] text-muted">{excerpt(tiptapToText(post.content), 100)}</p>
-                </Link>
-              ))}
+            <div className="card-elevated py-16 text-center">
+              <Newspaper className="mx-auto mb-3 h-10 w-10 text-line" />
+              <p className="text-sm text-ink-soft">ยังไม่มีข่าวสาร</p>
             </div>
+          ) : (
+            <NewsCardGrid posts={posts} />
           )}
         </div>
       </section>
