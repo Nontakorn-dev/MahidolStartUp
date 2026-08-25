@@ -47,9 +47,9 @@ export function MediaPicker({ value, onChange, label }: MediaPickerProps) {
 
   return (
     <div className="space-y-2">
-      {label && <label className="block text-sm font-medium text-mu-navy">{label}</label>}
+      {label && <label className="block text-sm font-medium text-ink">{label}</label>}
       {value ? (
-        <div className="relative overflow-hidden rounded-xl border border-gray-200">
+        <div className="relative overflow-hidden rounded-xl border border-line">
           <img src={value} alt="" className="h-48 w-full object-cover" />
           <div className="absolute bottom-2 right-2 flex gap-2">
             <Button size="sm" variant="secondary" onClick={() => inputRef.current?.click()}>
@@ -63,10 +63,10 @@ export function MediaPicker({ value, onChange, label }: MediaPickerProps) {
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="flex h-48 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-200 text-gray-400 transition-colors hover:border-mu-gold hover:text-mu-gold"
+          className="flex h-48 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-line text-ink-soft transition-colors hover:border-gold hover:text-gold"
         >
           {uploading ? (
-            <div className="h-6 w-6 animate-spin rounded-full border-2 border-mu-gold border-t-transparent" />
+            <div className="h-6 w-6 animate-spin rounded-full border-2 border-gold border-t-transparent" />
           ) : (
             <>
               <Upload className="h-8 w-8" />

@@ -1,15 +1,11 @@
 import { Link } from 'react-router-dom'
 import { Calendar, ArrowRight, MapPin } from 'lucide-react'
-import { cn } from '../../lib/utils'
-import type { ClubEvent } from '../../data/events'
+import { cn, formatDate } from '../../lib/utils'
+import { ImagePlaceholder } from '../cms/MediaPicker'
+import { deadlineDisplay, effectiveStatus, type ClubEvent, type ClubEventStatus } from '../../data/events'
+import { CLUB_EVENT_STATUS_LABELS } from '../../lib/labels'
 
-const STATUS_LABEL: Record<ClubEvent['status'], string> = {
-  open: 'เปิดรับสมัคร',
-  upcoming: 'เร็ว ๆ นี้',
-  closed: 'ปิดรับแล้ว',
-}
-
-const STATUS_CLASS: Record<ClubEvent['status'], string> = {
+const STATUS_CLASS: Record<ClubEventStatus, string> = {
   open: 'event-card__status--open',
   upcoming: 'event-card__status--upcoming',
   closed: 'event-card__status--closed',
@@ -24,6 +20,9 @@ export function EventCard({
   featured?: boolean
   className?: string
 }) {
+  const status = effectiveStatus(event)
+  const isClosed = status === 'closed'
+
   return (
     <Link
       to={`/events/${event.slug}`}
@@ -31,16 +30,20 @@ export function EventCard({
     >
       <article className="event-card__inner">
         <div className="event-card__media">
-          <img
-            src={event.coverImage}
-            alt={event.title}
-            className="event-card__img"
-            loading="lazy"
-          />
+          {event.coverImage ? (
+            <img
+              src={event.coverImage}
+              alt=""
+              className="event-card__img"
+              loading="lazy"
+            />
+          ) : (
+            <ImagePlaceholder className="h-full w-full" />
+          )}
           <div className="event-card__overlay" />
           <span className="event-card__category">{event.category}</span>
-          <span className={cn('event-card__status', STATUS_CLASS[event.status])}>
-            {STATUS_LABEL[event.status]}
+          <span className={cn('event-card__status', STATUS_CLASS[status])}>
+            {CLUB_EVENT_STATUS_LABELS[status]}
           </span>
         </div>
 
@@ -48,7 +51,7 @@ export function EventCard({
           <div className="event-card__meta">
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-3.5 w-3.5" aria-hidden />
-              {event.deadlineLabel}
+              {deadlineDisplay(event, formatDate)}
             </span>
             {event.location && (
               <span className="inline-flex items-center gap-1.5">
@@ -70,7 +73,8 @@ export function EventCard({
           )}
 
           <span className="event-card__cta">
-            ดูรายละเอียด <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            {isClosed ? 'ดูสรุปโครงการ' : 'ดูรายละเอียด'}
+            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </span>
         </div>
       </article>
@@ -86,6 +90,11 @@ export function EventCardGrid({
   className?: string
 }) {
   if (events.length === 0) return null
+
+  // การ์ดใบเดียวใน grid 2 คอลัมน์จะเหลือช่องว่างครึ่งจอ — ใช้เลย์เอาต์เต็มความกว้างแทน
+  if (events.length === 1) {
+    return <EventCard event={events[0]} featured className={className} />
+  }
 
   return (
     <div className={cn('event-grid event-grid--uniform', className)}>

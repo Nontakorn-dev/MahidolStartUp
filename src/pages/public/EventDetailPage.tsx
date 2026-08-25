@@ -1,82 +1,112 @@
 import { Link, useParams } from 'react-router-dom'
 import {
-  ArrowLeft,
   Calendar,
   ExternalLink,
   MapPin,
   Sparkles,
   Users,
 } from 'lucide-react'
-import { getEventBySlug, getUpcomingEvents } from '../../data/events'
+import { deadlineDisplay, effectiveStatus } from '../../data/events'
+import { useClubEvent } from '../../lib/events'
 import { EventCard } from '../../components/ui/EventCard'
+import { BackLink } from '../../components/ui/BackLink'
+import { CLUB_EVENT_STATUS_LABELS } from '../../lib/labels'
+import { ArticleSkeleton } from '../../components/ui/Skeleton'
+import { RichTextContent } from '../../components/cms/RichTextEditor'
 import { Button } from '../../components/ui/Button'
+import { cn, formatDate } from '../../lib/utils'
+
+const STATUS_PILL: Record<string, string> = {
+  open: 'bg-emerald-500/90 text-white',
+  upcoming: 'bg-white/15 text-white backdrop-blur-sm',
+  closed: 'bg-white/15 text-hero-text backdrop-blur-sm',
+}
 
 export function EventDetailPage() {
   const { slug } = useParams<{ slug: string }>()
-  const event = slug ? getEventBySlug(slug) : undefined
-  const related = getUpcomingEvents().filter((e) => e.slug !== slug).slice(0, 3)
+  const { event, related, isLoading } = useClubEvent(slug)
+
+  if (isLoading && !event) {
+    return (
+      <div className="wrap section-pad max-w-3xl">
+        <ArticleSkeleton />
+      </div>
+    )
+  }
 
   if (!event) {
     return (
       <div className="wrap section-pad text-center">
-        <p className="text-ink-soft">ไม่พบกิจกรรมนี้</p>
-        <Link to="/events" className="mt-4 inline-block font-semibold text-ink hover:underline">
-          กลับไปหน้ากิจกรรม
-        </Link>
+        <h1 className="font-heading text-2xl text-ink">ไม่พบกิจกรรมนี้</h1>
+        <p className="mt-2 text-ink-soft">กิจกรรมอาจถูกปิดหรือย้ายไปแล้ว</p>
+        <Link to="/events" className="btn-primary mt-6">ดูกิจกรรมทั้งหมด</Link>
       </div>
     )
   }
+
+  const status = effectiveStatus(event)
+  const isClosed = status === 'closed'
+  const hasRichBody = !!event.richBody && Object.keys(event.richBody).length > 0
 
   return (
     <div>
       {/* Cover hero */}
       <div className="relative overflow-hidden bg-ink">
-        <img
-          src={event.coverImage}
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover opacity-40"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/70 to-ink/40" />
-        <div className="wrap relative pb-12 pt-8 md:pb-16 md:pt-10">
-          <Link
-            to="/events"
-            className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-hero-text no-underline hover:text-gold"
-          >
-            <ArrowLeft className="h-4 w-4" /> กลับไปหน้ากิจกรรม
-          </Link>
+        {/*
+          ปกโครงการเป็นโปสเตอร์ที่มีตัวหนังสือแน่น ถ้าวางเป็นภาพคมชัดหลังหัวข้อจะอ่านไม่ออก
+          จึงเบลอให้เป็นพื้นหลังเชิงบรรยากาศ (ภาพเต็มยังอยู่ในเนื้อหาด้านล่าง)
+        */}
+        {event.coverImage && (
+          <img
+            src={event.coverImage}
+            alt=""
+            aria-hidden
+            className="absolute inset-0 h-full w-full scale-110 object-cover opacity-60 blur-[6px]"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/65" />
+        <div className="wrap relative pb-16 pt-10 md:pb-20 md:pt-14">
+          <BackLink to="/events" tone="dark" className="mb-10">
+            กลับไปหน้ากิจกรรม
+          </BackLink>
 
           <div className="flex flex-wrap gap-2">
-            <span className="rounded-md bg-gold px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-wider text-ink">
+            <span className="rounded-md bg-gold px-3 py-1.5 font-heading text-[13px] font-semibold leading-normal text-ink">
               {event.category}
             </span>
-            <span className="rounded-md bg-white/15 px-2.5 py-1 font-mono text-[11px] font-semibold text-white backdrop-blur-sm">
-              เปิดรับสมัคร
+            <span className={cn('rounded-md px-3 py-1.5 font-heading text-[13px] font-semibold leading-normal', STATUS_PILL[status])}>
+              {CLUB_EVENT_STATUS_LABELS[status]}
             </span>
           </div>
 
-          <h1 className="mt-4 max-w-3xl font-heading text-3xl leading-tight text-white md:text-4xl lg:text-[2.75rem]">
+          <h1 className="mt-5 max-w-3xl font-heading text-3xl leading-[1.3] text-white md:text-4xl md:leading-[1.25] lg:text-[2.75rem]">
             {event.title}
           </h1>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-hero-text md:text-lg">
+          <p className="mt-5 max-w-2xl text-base leading-[1.8] text-hero-text md:text-lg">
             {event.tagline}
           </p>
 
-          <div className="mt-6 flex flex-wrap gap-4 text-sm text-hero-text-strong">
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm leading-relaxed text-hero-text-strong">
             <span className="inline-flex items-center gap-2">
               <Calendar className="h-4 w-4 text-gold" />
-              {event.deadlineLabel}
+              {deadlineDisplay(event, formatDate)}
             </span>
-            <span className="inline-flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-gold" />
-              {event.location}
-            </span>
-            <span className="inline-flex items-center gap-2">
-              <Users className="h-4 w-4 text-gold" />
-              {event.organizer}
-            </span>
+            {event.location && (
+              <span className="inline-flex items-center gap-2">
+                <MapPin className="h-4 w-4 text-gold" />
+                {event.location}
+              </span>
+            )}
+            {/* บางโครงการใส่ผู้จัดกับสถานที่เป็นค่าเดียวกัน ไม่ต้องโชว์ซ้ำ */}
+            {event.organizer && event.organizer !== event.location && (
+              <span className="inline-flex items-center gap-2">
+                <Users className="h-4 w-4 text-gold" />
+                {event.organizer}
+              </span>
+            )}
           </div>
 
-          {event.registrationUrl && (
+          {event.registrationUrl && !isClosed && (
             <div className="mt-8">
               <a href={event.registrationUrl} target="_blank" rel="noopener noreferrer" className="btn-accent">
                 <ExternalLink className="h-4 w-4" /> สมัครเลย
@@ -90,41 +120,53 @@ export function EventDetailPage() {
         <div className="grid gap-10 lg:grid-cols-[1fr_320px]">
           <div className="space-y-8">
             {/* Poster */}
-            <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-card">
-              <img
-                src={event.coverImage}
-                alt={event.title}
-                className="w-full object-cover"
-              />
-            </div>
+            {event.coverImage && (
+              <div className="overflow-hidden rounded-2xl border border-line bg-surface shadow-card">
+                <img
+                  src={event.coverImage}
+                  alt={event.title}
+                  className="w-full object-cover"
+                />
+              </div>
+            )}
 
             {/* Body */}
-            <section>
-              <h2 className="font-heading text-xl text-ink">เกี่ยวกับโครงการ</h2>
-              <div className="mt-4 space-y-4">
-                {event.body.map((para) => (
-                  <p key={para.slice(0, 40)} className="text-base leading-relaxed text-ink-soft">
-                    {para}
-                  </p>
-                ))}
-              </div>
-            </section>
+            {(event.body.length > 0 || hasRichBody) && (
+              <section>
+                <h2 className="font-heading text-xl text-ink">เกี่ยวกับโครงการ</h2>
+                {hasRichBody ? (
+                  <div className="prose mt-4 max-w-none">
+                    <RichTextContent content={event.richBody!} />
+                  </div>
+                ) : (
+                  <div className="mt-4 space-y-4">
+                    {event.body.map((para) => (
+                      <p key={para.slice(0, 40)} className="text-base leading-relaxed text-ink-soft">
+                        {para}
+                      </p>
+                    ))}
+                  </div>
+                )}
+              </section>
+            )}
 
             {/* Highlights */}
-            <section>
-              <h2 className="font-heading text-xl text-ink">สิ่งที่คุณจะได้รับ</h2>
-              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-                {event.highlights.map((h) => (
-                  <li
-                    key={h}
-                    className="flex gap-3 rounded-xl border border-line bg-surface p-4 text-sm text-ink"
-                  >
-                    <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
-                    <span>{h}</span>
-                  </li>
-                ))}
-              </ul>
-            </section>
+            {event.highlights.length > 0 && (
+              <section>
+                <h2 className="font-heading text-xl text-ink">สิ่งที่คุณจะได้รับ</h2>
+                <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                  {event.highlights.map((h) => (
+                    <li
+                      key={h}
+                      className="flex gap-3 rounded-xl border border-line bg-surface p-4 text-sm text-ink"
+                    >
+                      <Sparkles className="mt-0.5 h-4 w-4 shrink-0 text-gold" />
+                      <span>{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
 
             {/* Roles */}
             {event.roles && event.roles.length > 0 && (
@@ -162,11 +204,24 @@ export function EventDetailPage() {
           {/* Sticky CTA */}
           <aside className="lg:sticky lg:top-24 lg:self-start">
             <div className="rounded-2xl border border-line bg-surface p-6 shadow-card">
-              <p className="font-mono text-[11px] uppercase tracking-wider text-ink-soft">สมัครเข้าร่วม</p>
+              <p className="text-sm font-semibold text-ink-soft">
+                {isClosed ? 'โครงการนี้ปิดรับแล้ว' : 'สมัครเข้าร่วม'}
+              </p>
               <h3 className="mt-2 font-heading text-lg text-ink">{event.shortTitle}</h3>
-              <p className="mt-2 text-sm text-ink-soft">{event.deadlineLabel}</p>
+              <p className="mt-2 text-sm text-ink-soft">
+                {deadlineDisplay(event, formatDate)}
+              </p>
 
-              {event.registrationUrl ? (
+              {isClosed ? (
+                <>
+                  <p className="mt-4 rounded-lg bg-flow-bg p-3 text-sm leading-relaxed text-ink-soft">
+                    รอบนี้ปิดรับสมัครแล้ว — ติดตามรอบถัดไปได้จากหน้ากิจกรรม หรือลงชื่อไว้กับ MSC Connect
+                  </p>
+                  <Link to="/register/startup" className="btn-primary mt-4 w-full">
+                    ลงชื่อกับ MSC Connect
+                  </Link>
+                </>
+              ) : event.registrationUrl ? (
                 <a
                   href={event.registrationUrl}
                   target="_blank"

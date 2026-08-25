@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import type { User, Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
-import type { Profile } from '../types'
+import type { Affiliation, Profile } from '../types'
 
 interface AuthContextType {
   user: User | null
@@ -9,7 +9,12 @@ interface AuthContextType {
   profile: Profile | null
   loading: boolean
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>
-  signUp: (email: string, password: string, fullName: string) => Promise<{ error: Error | null }>
+  signUp: (
+    email: string,
+    password: string,
+    fullName: string,
+    affiliation?: Affiliation,
+  ) => Promise<{ error: Error | null }>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
 }
@@ -22,13 +27,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
 
-  const fetchProfile = async (userId: string) => {
+  const fetchProfile = async (userId: string, metadata?: Record<string, unknown>) => {
     const { data } = await supabase
       .from('profiles')
       .select('*')
       .eq('id', userId)
-      .single()
-    setProfile(data)
+      .maybeSingle()
+
+    // ผู้ที่ต้องยืนยันอีเมลก่อน จะยังไม่มี session ตอนสมัคร — เก็บสังกัดจาก metadata
+    // มาใส่ให้ตอน login ครั้งแรก และเฉพาะโปรไฟล์ที่ยังไม่เคยถูกแก้ไขเท่านั้น
+    const pending = metadata?.affiliation as Profile['affiliation'] | undefined
+    const untouched = data && data.created_at === data.updated_at
+    if (data && pending && untouched && data.affiliation !== pending) {
+      const { data: updated } = await supabase
+        .from('profiles')
+        .update({ affiliation: pending })
+        .eq('id', userId)
+        .select('*')
+        .maybeSingle()
+      setProfile((updated ?? data) as Profile)
+      return
+    }
+
+    setProfile(data as Profile | null)
   }
 
   const refreshProfile = async () => {
@@ -40,7 +61,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session)
       setUser(session?.user ?? null)
       if (session?.user) {
-        fetchProfile(session.user.id).finally(() => setLoading(false))
+        fetchProfile(session.user.id, session.user.user_metadata).finally(() => setLoading(false))
       } else {
         setLoading(false)
       }
@@ -51,7 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session)
         setUser(session?.user ?? null)
         if (session?.user) {
-          await fetchProfile(session.user.id)
+          await fetchProfile(session.user.id, session.user.user_metadata)
         } else {
           setProfile(null)
         }
@@ -67,13 +88,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error as Error | null }
   }
 
-  const signUp = async (email: string, password: string, fullName: string) => {
-    const { error } = await supabase.auth.signUp({
+  const signUp = async (
+    email: string,
+    password: string,
+    fullName: string,
+    affiliation: Affiliation = 'mu_student',
+  ) => {
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName } },
+      options: { data: { full_name: fullName, affiliation } },
     })
-    return { error: error as Error | null }
+    if (error) return { error: error as Error }
+
+    /**
+     * trigger handle_new_user เขียนแค่ full_name/avatar_url — สังกัดที่ผู้ใช้เลือก
+     * จึงหายไปทั้งที่ฟอร์มถามไว้ ถ้าสมัครแล้วได้ session ทันที (ปิด email confirm)
+     * ให้อัปเดตต่อเลย ส่วนกรณีต้องยืนยันอีเมล ค่าจะถูกอ่านจาก metadata ตอน login ครั้งแรก
+     */
+    if (data.session?.user) {
+      await supabase.from('profiles').update({ affiliation }).eq('id', data.session.user.id)
+    }
+
+    return { error: null }
   }
 
   const signOut = async () => {

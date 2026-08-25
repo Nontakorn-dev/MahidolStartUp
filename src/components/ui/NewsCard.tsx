@@ -2,23 +2,9 @@ import { Link } from 'react-router-dom'
 import { Calendar, ArrowRight } from 'lucide-react'
 import { cn } from '../../lib/utils'
 import { formatDate, excerpt, tiptapToText } from '../../lib/utils'
+import { postCategoryLabel } from '../../lib/labels'
 import { ImagePlaceholder } from '../cms/MediaPicker'
 import type { Post } from '../../types'
-
-const CATEGORY_LABELS: Record<string, string> = {
-  announcement: 'ประกาศ',
-  workshop: 'เวิร์กช็อป',
-  competition: 'การแข่งขัน',
-  'success-story': 'Success Story',
-  general: 'ข่าวสาร',
-  news: 'ข่าวสาร',
-  event: 'กิจกรรม',
-}
-
-function categoryLabel(category: string | null) {
-  if (!category) return 'ข่าวสาร'
-  return CATEGORY_LABELS[category] ?? category
-}
 
 interface NewsCardProps {
   href: string
@@ -66,7 +52,7 @@ export function NewsCard({
             <ImagePlaceholder className="h-full w-full" />
           )}
           {category && (
-            <span className="news-card__tag">{categoryLabel(category)}</span>
+            <span className="news-card__tag">{postCategoryLabel(category)}</span>
           )}
         </div>
 

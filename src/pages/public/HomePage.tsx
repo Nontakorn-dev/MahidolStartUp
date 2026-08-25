@@ -1,70 +1,71 @@
 import { Link } from 'react-router-dom'
 import { ArrowRight, Sparkles, UserRound, Search, Send, Handshake } from 'lucide-react'
-import { HomeHeroNav } from '../../components/layout/Navbar'
 import { HomeCtaFooter } from '../../components/layout/Footer'
 import { NetworkDiagram } from '../../components/home/NetworkDiagram'
 import { SectionHeader } from '../../components/ui/SectionHeader'
 import { EventCardGrid } from '../../components/ui/EventCard'
 import { FeaturedStartupsSection } from '../../components/home/FeaturedStartupsSection'
 import { PartnerLogoMarquee } from '../../components/home/PartnerLogoMarquee'
-import { getUpcomingEvents } from '../../data/events'
+import { CardGridSkeleton } from '../../components/ui/Skeleton'
+import { useClubEvents } from '../../lib/events'
 
 const flowSteps = [
   {
     step: '01',
-    title: 'สร้างโปรไฟล์',
-    desc: 'กรอกข้อมูลทีมหรือบทบาทของคุณ พร้อมระบุชัดว่ากำลังมองหาอะไร และให้อะไรได้บ้าง',
+    title: 'บอกว่าคุณคือใคร',
+    desc: 'กรอกข้อมูลทีมหรือบทบาทของคุณ พร้อมบอกว่ากำลังมองหาอะไร และช่วยคนอื่นได้เรื่องไหน',
     icon: UserRound,
     tone: 'sky',
   },
   {
     step: '02',
-    title: 'ค้นหา / กรอง',
-    desc: 'เลือกดู Startup หรือ Partner ตามอุตสาหกรรม ระยะธุรกิจ หรือสังกัดที่สนใจ',
+    title: 'มองหาคนที่ใช่',
+    desc: 'เลือกดูทีมหรือพาร์ทเนอร์ตามอุตสาหกรรม ช่วงที่ธุรกิจกำลังอยู่ หรือสังกัดที่สนใจ',
     icon: Search,
     tone: 'ink',
   },
   {
     step: '03',
-    title: 'ส่งคำขอ',
-    desc: 'เขียนข้อความสั้น ๆ แนะนำตัวและเหตุผลที่อยากเชื่อมต่ออย่างมีจุดหมาย',
+    title: 'ทักไปคุย',
+    desc: 'เขียนแนะนำตัวสั้น ๆ บอกให้ชัดว่าทำไมถึงอยากคุยกับเขา',
     icon: Send,
     tone: 'ink',
   },
   {
     step: '04',
-    title: 'ตอบรับ',
-    desc: 'เมื่อทั้งสองฝ่ายตอบรับ ระบบจะเปิดช่องทางติดต่อให้เห็นทันที',
+    title: 'ได้เริ่มคุยกันจริง',
+    desc: 'พอตกลงกันทั้งสองฝ่าย ช่องทางติดต่อจะขึ้นให้เห็นทันที',
     icon: Handshake,
     tone: 'mint',
   },
 ] as const
 
 export function HomePage() {
-  const events = getUpcomingEvents(4)
+  const { active, past, isLoading } = useClubEvents()
+  // หน้าแรกโชว์เฉพาะที่ยังเปิดรับ ถ้าไม่มีเลยค่อย fallback เป็นโครงการล่าสุดที่ผ่านมา
+  const events = (active.length > 0 ? active : past).slice(0, 4)
+  const showingPast = active.length === 0 && past.length > 0
 
   return (
     <div>
       {/* Hero */}
       <header className="relative overflow-hidden border-b border-line bg-gradient-to-b from-ted-light/70 via-ted-mist/40 to-surface">
         <div className="wrap relative">
-          <HomeHeroNav />
-
-          <div className="grid items-center gap-8 pb-10 md:grid-cols-2 md:gap-12 md:pb-14 lg:pb-16">
+          <div className="grid items-center gap-8 pb-10 pt-8 md:grid-cols-2 md:gap-12 md:pb-14 md:pt-10 lg:pb-16">
             <div className="order-1 -mx-1 animate-fade-up md:order-2 md:mx-0">
               <NetworkDiagram />
             </div>
 
             <div className="order-2 animate-fade-up animate-delay-1 text-center md:order-1 md:text-left">
-              <div className="eyebrow">Est. 2018 · Supported by iNT, Mahidol University</div>
-              <h1 className="mt-3 font-heading text-[clamp(1.75rem,5.5vw,2.85rem)] leading-[1.28] tracking-tight text-ink md:mt-4">
-                เครือข่ายที่ทำให้ไอเดีย
+              <div className="eyebrow">ก่อตั้งปี 2561 · สนับสนุนโดย iNT มหาวิทยาลัยมหิดล</div>
+              <h1 className="mt-3 font-heading text-[clamp(1.75rem,5.5vw,2.85rem)] leading-[1.32] text-ink md:mt-4">
+                จากไอเดียในห้องเรียน
                 <br />
-                กลายเป็น<span className="text-gold-deep"> สตาร์ตอัพจริง</span>
+                สู่<span className="text-gold-deep">สตาร์ตอัพจริง</span>
               </h1>
-              <p className="mx-auto mt-4 max-w-md text-[15px] leading-[1.75] text-ink-soft md:mx-0 md:mt-5 md:text-[17px]">
-                พื้นที่กลางของ Mahidol Startup Club ที่รวมข่าวสาร กิจกรรม และการจับคู่ทางธุรกิจไว้ในที่เดียว
-                — เปิดให้ทั้งคนในมหิดลและพันธมิตรภายนอกเชื่อมต่อกันได้ตลอดปี
+              <p className="mx-auto mt-4 max-w-md text-[15px] leading-[1.8] text-ink-soft md:mx-0 md:mt-5 md:text-[17px]">
+                ชมรมสตาร์ตอัพของมหาวิทยาลัยมหิดล รวมกิจกรรม ข่าวสาร และการหาพาร์ทเนอร์ไว้ที่เดียว
+                เปิดให้ทั้งคนมหิดลและคนนอกเข้าร่วมได้ตลอดปี
               </p>
               <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center md:justify-start">
                 <Link to="/register/startup" className="btn-accent justify-center">
@@ -87,9 +88,9 @@ export function HomePage() {
           <div className="flow-how">
             <div className="flow-how__header">
               <div className="eyebrow">MSC Connect</div>
-              <h2 className="flow-how__title">ขั้นตอนการใช้แพลตฟอร์ม</h2>
+              <h2 className="flow-how__title">หาพาร์ทเนอร์ยังไง</h2>
               <p className="flow-how__desc">
-                สร้างโปรไฟล์ ค้นหาคู่เชื่อมต่อ ส่งคำขอ และเริ่มคุยกันเมื่อทั้งสองฝ่ายตอบรับ
+                สี่ขั้นตอน ตั้งแต่กรอกข้อมูลจนได้เริ่มคุยกับคนที่ใช่ ไม่ต้องรอรอบโครงการ
               </p>
             </div>
 
@@ -119,17 +120,25 @@ export function HomePage() {
       <section className="section-pad bg-surface" id="events">
         <div className="wrap">
           <SectionHeader
-            eyebrow="ข่าวสารประชาสัมพันธ์"
-            title="กิจกรรม & โครงการ"
-            description="Talent Accelerator, Startup Thailand League, TED Youth และ Blue Horizon"
+            eyebrow="กิจกรรมและโครงการ"
+            title={showingPast ? 'โครงการที่ผ่านมา' : 'กำลังเปิดรับสมัคร'}
+            description={
+              showingPast
+                ? 'ตอนนี้ยังไม่มีรอบที่เปิดรับสมัคร ระหว่างนี้ดูโครงการที่ผ่านมาไปพลางก่อนได้'
+                : 'โครงการบ่มเพาะ การแข่งขัน และทุนสนับสนุน ที่ชมรมจัดร่วมกับ iNT มหิดล'
+            }
             actionHref="/events"
             actionLabel="ดูทั้งหมด"
           />
-          <EventCardGrid events={events} />
+          {isLoading && events.length === 0 ? (
+            <CardGridSkeleton count={3} />
+          ) : (
+            <EventCardGrid events={events} />
+          )}
         </div>
       </section>
 
-      <FeaturedStartupsSection actionHref="/news" />
+      <FeaturedStartupsSection actionHref="/match/discover" />
 
       <HomeCtaFooter />
     </div>

@@ -8,6 +8,7 @@ import { Select } from '../../components/ui/Select'
 import { Button } from '../../components/ui/Button'
 import { Card } from '../../components/ui/Card'
 import { INDUSTRIES, CAN_OFFER_OPTIONS } from '../../lib/constants'
+import { AVAILABILITY_LABELS } from '../../lib/labels'
 import type { Availability } from '../../types'
 
 export function CreateMentorProfilePage() {
@@ -44,89 +45,120 @@ export function CreateMentorProfilePage() {
   }
 
   const addExpertise = () => {
-    if (customExpertise && !expertise.includes(customExpertise)) {
-      setExpertise([...expertise, customExpertise])
-      setCustomExpertise('')
+    const value = customExpertise.trim()
+    if (value && !expertise.includes(value)) {
+      setExpertise([...expertise, value])
     }
+    setCustomExpertise('')
   }
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-      <h1 className="mb-6 text-2xl font-bold text-mu-navy">สร้าง Mentor / Partner Profile</h1>
-      <Card className="space-y-4">
-        <Input label="ตำแหน่ง / Title" placeholder="เช่น Product Manager at ..." value={title} onChange={(e) => setTitle(e.target.value)} />
+    <div className="wrap section-pad">
+      <div className="mx-auto max-w-2xl">
+        <h1 className="font-heading text-2xl text-ink">สร้าง Mentor / Partner Profile</h1>
+        <p className="mb-6 mt-2 text-sm leading-relaxed text-ink-soft">
+          บอกความเชี่ยวชาญและสิ่งที่คุณช่วยทีมนักศึกษาได้ เพื่อให้ทีมที่กำลังมองหาส่งคำขอมาหาคุณ
+        </p>
+        <Card className="space-y-4">
+          <Input label="ตำแหน่ง / Title" placeholder="เช่น Product Manager at ..." value={title} onChange={(e) => setTitle(e.target.value)} />
 
-        <div>
-          <label className="mb-2 block text-sm font-medium text-mu-navy">Expertise</label>
-          <div className="flex gap-2">
-            <Input placeholder="เพิ่ม expertise..." value={customExpertise} onChange={(e) => setCustomExpertise(e.target.value)} />
-            <Button variant="outline" onClick={addExpertise}>เพิ่ม</Button>
+          <div>
+            <label className="mb-2 block text-sm font-medium text-ink">ความเชี่ยวชาญ</label>
+            <div className="flex items-start gap-2">
+              <div className="flex-1">
+                <Input
+                  placeholder="เช่น Product Design, Go-to-Market"
+                  value={customExpertise}
+                  onChange={(e) => setCustomExpertise(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault()
+                      addExpertise()
+                    }
+                  }}
+                />
+              </div>
+              <Button type="button" variant="outline" onClick={addExpertise} disabled={!customExpertise.trim()}>
+                เพิ่ม
+              </Button>
+            </div>
+            {expertise.length > 0 && (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {expertise.map((e) => (
+                  <button
+                    key={e}
+                    type="button"
+                    onClick={() => setExpertise(expertise.filter((x) => x !== e))}
+                    aria-label={`ลบ ${e}`}
+                    className="rounded-full bg-ink px-3 py-1 text-xs text-white transition-colors hover:bg-ink-soft"
+                  >
+                    {e} ×
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="mt-2 flex flex-wrap gap-1">
-            {expertise.map((e) => (
-              <button key={e} onClick={() => setExpertise(expertise.filter((x) => x !== e))} className="rounded-full bg-mu-navy px-3 py-1 text-xs text-white">
-                {e} ×
-              </button>
-            ))}
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-ink">Industries</label>
+            <div className="tag-picker">
+              {INDUSTRIES.map((i) => (
+                <button
+                  key={i}
+                  type="button"
+                  onClick={() => toggleArray(industries, i, setIndustries)}
+                  className={`tag-picker__btn ${industries.includes(i) ? 'tag-picker__btn--active' : ''}`}
+                >
+                  {i}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label className="mb-2 block text-sm font-medium text-mu-navy">Industries</label>
-          <div className="flex flex-wrap gap-2">
-            {INDUSTRIES.map((i) => (
-              <button
-                key={i}
-                type="button"
-                onClick={() => toggleArray(industries, i, setIndustries)}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                  industries.includes(i) ? 'bg-mu-navy text-white' : 'bg-gray-100 text-gray-600'
-                }`}
-              >
-                {i}
-              </button>
-            ))}
+          <div>
+            <label className="mb-2 block text-sm font-medium text-ink">สิ่งที่ให้ได้</label>
+            <div className="tag-picker">
+              {CAN_OFFER_OPTIONS.map((o) => (
+                <button
+                  key={o.value}
+                  type="button"
+                  onClick={() => toggleArray(canOffer, o.value, setCanOffer)}
+                  className={`tag-picker__btn ${canOffer.includes(o.value) ? 'tag-picker__btn--active' : ''}`}
+                >
+                  {o.label}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
 
-        <div>
-          <label className="mb-2 block text-sm font-medium text-mu-navy">สิ่งที่ให้ได้</label>
-          <div className="flex flex-wrap gap-2">
-            {CAN_OFFER_OPTIONS.map((o) => (
-              <button
-                key={o.value}
-                type="button"
-                onClick={() => toggleArray(canOffer, o.value, setCanOffer)}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
-                  canOffer.includes(o.value) ? 'bg-mu-gold text-mu-navy' : 'bg-gray-100 text-gray-600'
-                }`}
-              >
-                {o.label}
-              </button>
-            ))}
-          </div>
-        </div>
+          <Select
+            label="ความพร้อมรับให้คำปรึกษา"
+            value={availability}
+            onChange={(v) => setAvailability(v as Availability)}
+            options={Object.entries(AVAILABILITY_LABELS).map(([value, label]) => ({ value, label }))}
+          />
 
-        <Select
-          label="Availability"
-          value={availability}
-          onChange={(v) => setAvailability(v as Availability)}
-          options={[
-            { value: 'open', label: 'เปิดรับ' },
-            { value: 'limited', label: 'จำกัด' },
-            { value: 'closed', label: 'ปิดรับชั่วคราว' },
-          ]}
-        />
+          <label className="flex items-start gap-2 rounded-lg bg-flow-bg p-3 text-sm text-ink-soft">
+            <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} className="mt-1 rounded" />
+            <span>
+              เผยแพร่โปรไฟล์สาธารณะ
+              <span className="mt-0.5 block text-xs text-ink-soft/80">
+                ถ้าไม่ติ๊ก โปรไฟล์จะถูกบันทึกไว้แต่จะไม่ปรากฏในหน้าค้นหา
+              </span>
+            </span>
+          </label>
 
-        <label className="flex items-center gap-2 text-sm">
-          <input type="checkbox" checked={isPublic} onChange={(e) => setIsPublic(e.target.checked)} className="rounded" />
-          เผยแพร่โปรไฟล์สาธารณะ
-        </label>
+          {mutation.isError && (
+            <p className="rounded-lg bg-rose-50 px-3 py-2 text-sm text-rose-700">
+              บันทึกไม่สำเร็จ — {(mutation.error as Error).message}
+            </p>
+          )}
 
-        <Button onClick={() => mutation.mutate()} disabled={mutation.isPending} className="w-full">
-          {mutation.isPending ? 'กำลังบันทึก...' : 'สร้างโปรไฟล์'}
-        </Button>
-      </Card>
+          <Button onClick={() => mutation.mutate()} disabled={mutation.isPending} className="w-full">
+            {mutation.isPending ? 'กำลังบันทึก...' : 'สร้างโปรไฟล์'}
+          </Button>
+        </Card>
+      </div>
     </div>
   )
 }

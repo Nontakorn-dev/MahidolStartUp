@@ -24,7 +24,7 @@ export function RegisterPage() {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const { error } = await signUp(email, password, fullName)
+    const { error } = await signUp(email, password, fullName, affiliation)
     setLoading(false)
     if (error) {
       setError(error.message)

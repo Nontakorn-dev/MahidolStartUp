@@ -62,7 +62,12 @@ export const SOCIAL_ICONS = {
 } as const
 
 export const SOCIAL_LINKS = {
-  facebook: 'https://www.facebook.com/',
+  /**
+   * TODO: ใส่ URL เพจ Facebook จริงของชมรม (เช่น https://www.facebook.com/<page>)
+   * ตอนนี้เว้นว่างไว้ เพราะค่าเดิมชี้ไป facebook.com เฉย ๆ ซึ่งกดแล้วไม่ไปหน้าเพจชมรม
+   * ลิงก์จะกลับมาแสดงบนเว็บอัตโนมัติเมื่อใส่ค่าแล้ว
+   */
+  facebook: '',
   instagram: 'https://www.instagram.com/mahidolstartup_official',
-  line: 'http://bit.ly/MahidolStartup',
+  line: 'https://bit.ly/MahidolStartup',
 }

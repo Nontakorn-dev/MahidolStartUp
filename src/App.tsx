@@ -1,8 +1,9 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useParams } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { AuthProvider } from './contexts/AuthContext'
 import { Layout } from './components/layout/Layout'
 import { AdminLayout } from './components/layout/AdminLayout'
+import { ScrollToTop } from './components/layout/ScrollToTop'
 import { ProtectedRoute, RoleRoute } from './routes/ProtectedRoute'
 
 import { HomePage } from './pages/public/HomePage'
@@ -11,6 +12,7 @@ import { EventsPage } from './pages/public/EventsPage'
 import { EventDetailPage } from './pages/public/EventDetailPage'
 import { PostsPage } from './pages/public/PostsPage'
 import { PostDetailPage } from './pages/public/PostDetailPage'
+import { NotFoundPage } from './pages/public/NotFoundPage'
 
 import { MatchHubPage } from './pages/match/MatchHubPage'
 import { DiscoverPage } from './pages/match/DiscoverPage'
@@ -44,21 +46,28 @@ const queryClient = new QueryClient({
   },
 })
 
+/** /posts/:slug เป็น URL เก่า — ส่งต่อไป /news/:slug ที่เป็นเส้นทางหลัก */
+function LegacyPostRedirect() {
+  const { slug } = useParams<{ slug: string }>()
+  return <Navigate to={`/news/${slug}`} replace />
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route element={<Layout />}>
               <Route index element={<HomePage />} />
               <Route path="about" element={<AboutPage />} />
               <Route path="events" element={<EventsPage />} />
               <Route path="events/:slug" element={<EventDetailPage />} />
-              <Route path="posts" element={<PostsPage />} />
-              <Route path="posts/:slug" element={<PostDetailPage />} />
               <Route path="news" element={<PostsPage />} />
               <Route path="news/:slug" element={<PostDetailPage />} />
+              <Route path="posts" element={<Navigate to="/news" replace />} />
+              <Route path="posts/:slug" element={<LegacyPostRedirect />} />
               <Route path="register/startup" element={<StartupRegisterPage />} />
               <Route path="register/partner" element={<PartnerRegisterPage />} />
               <Route path="register/success" element={<RegisterSuccessPage />} />
@@ -72,6 +81,7 @@ export default function App() {
               <Route path="login" element={<LoginPage />} />
               <Route path="register" element={<RegisterPage />} />
               <Route path="profile" element={<ProtectedRoute><ProfileSettingsPage /></ProtectedRoute>} />
+              <Route path="*" element={<NotFoundPage />} />
             </Route>
 
             <Route
@@ -102,6 +112,7 @@ export default function App() {
               <Route path="startups" element={<StartupsAdminPage />} />
               <Route path="partners" element={<PartnersAdminPage />} />
               <Route path="requests" element={<RequestsAdminPage />} />
+              <Route path="*" element={<Navigate to="/admin" replace />} />
             </Route>
           </Routes>
         </BrowserRouter>

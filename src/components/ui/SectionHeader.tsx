@@ -25,11 +25,11 @@ export function SectionHeader({
     <div className={cn('mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-end sm:justify-between md:mb-12', className)}>
       <div className="max-w-2xl">
         <div className={cn('eyebrow', light && 'eyebrow-light')}>{eyebrow}</div>
-        <h2 className={cn('mt-3 font-heading text-[1.65rem] leading-tight tracking-tight md:text-[2rem]', light ? 'text-white' : 'text-ink')}>
+        <h2 className={cn('mt-3.5 font-heading text-[1.65rem] leading-[1.35] md:text-[2rem]', light ? 'text-white' : 'text-ink')}>
           {title}
         </h2>
         {description && (
-          <p className={cn('mt-3 max-w-xl text-[15px] leading-[1.7] md:text-base', light ? 'text-hero-text' : 'text-ink-soft')}>
+          <p className={cn('mt-3.5 max-w-xl text-[15px] leading-[1.8] md:text-base', light ? 'text-hero-text' : 'text-ink-soft')}>
             {description}
           </p>
         )}

@@ -7,22 +7,39 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+/**
+ * รองรับหัวข้อภาษาไทย — เดิม `\w` ตัดอักษรไทยทิ้งหมด ทำให้ทุกบทความไทย
+ * ได้ slug เป็น post-1754... ที่อ่านไม่รู้เรื่องและซ้ำกันเองได้
+ */
 export function slugify(text: string): string {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, '')
-    .replace(/[\s_-]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    || `post-${Date.now()}`
+  return (
+    text
+      .toLowerCase()
+      .trim()
+      .normalize('NFC')
+      // เก็บ a-z, 0-9, อักษรไทย (U+0E00–U+0E7F), ช่องว่าง และขีด
+      .replace(/[^a-z0-9฀-๿\s-]/g, '')
+      .replace(/[\s_-]+/g, '-')
+      .replace(/^-+|-+$/g, '') || `post-${Date.now()}`
+  )
+}
+
+/**
+ * เว็บใช้ภาษาไทยและข้อความที่เขียนไว้ในเนื้อหาใช้ พ.ศ. (เช่น "สมัครถึง 28 ก.พ. 2569")
+ * date-fns ให้ปี ค.ศ. — ถ้าไม่แปลง หน้าเดียวกันจะมีทั้ง 2026 และ 2569 ปนกัน
+ */
+function toBuddhistYear(date: Date) {
+  return date.getFullYear() + 543
 }
 
 export function formatDate(date: string | Date): string {
-  return format(new Date(date), 'd MMM yyyy', { locale: th })
+  const d = new Date(date)
+  return `${format(d, 'd MMM', { locale: th })} ${toBuddhistYear(d)}`
 }
 
 export function formatDateTime(date: string | Date): string {
-  return format(new Date(date), 'd MMM yyyy HH:mm', { locale: th })
+  const d = new Date(date)
+  return `${format(d, 'd MMM', { locale: th })} ${toBuddhistYear(d)} ${format(d, 'HH:mm')} น.`
 }
 
 export function timeAgo(date: string | Date): string {

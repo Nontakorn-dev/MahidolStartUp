@@ -4,6 +4,7 @@ import { Card } from '../../components/ui/Card'
 import { Badge } from '../../components/ui/Badge'
 import { Select } from '../../components/ui/Select'
 import { AFFILIATION_LABELS } from '../../lib/constants'
+import { ROLE_LABELS } from '../../lib/labels'
 import type { Profile, UserRole } from '../../types'
 
 export function UsersAdminPage() {
@@ -27,28 +28,23 @@ export function UsersAdminPage() {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['admin-users'] }),
   })
 
-  const roleOptions = [
-    { value: 'member', label: 'Member' },
-    { value: 'pr', label: 'PR' },
-    { value: 'core_team', label: 'Core Team' },
-    { value: 'admin', label: 'Admin' },
-  ]
+  const roleOptions = Object.entries(ROLE_LABELS).map(([value, label]) => ({ value, label }))
 
   return (
     <div>
-      <h1 className="mb-6 text-2xl font-bold text-mu-navy">จัดการผู้ใช้</h1>
+      <h1 className="mb-6 font-heading text-2xl text-ink">จัดการผู้ใช้</h1>
 
       {isLoading ? (
-        <div className="flex justify-center py-12"><div className="h-8 w-8 animate-spin rounded-full border-4 border-mu-gold border-t-transparent" /></div>
+        <div className="flex justify-center py-12"><div className="h-8 w-8 animate-spin rounded-full border-4 border-gold border-t-transparent" /></div>
       ) : (
         <div className="space-y-3">
           {users.map((u) => (
             <Card key={u.id} className="flex flex-wrap items-center justify-between gap-4 !p-4">
               <div>
-                <p className="font-medium text-mu-navy">{u.full_name}</p>
-                <div className="mt-1 flex gap-2">
-                  <Badge>{AFFILIATION_LABELS[u.affiliation]}</Badge>
-                  <Badge variant="gold">{u.role}</Badge>
+                <p className="font-medium text-ink">{u.full_name}</p>
+                <div className="mt-1 flex flex-wrap gap-2">
+                  <Badge>{AFFILIATION_LABELS[u.affiliation] ?? u.affiliation}</Badge>
+                  <Badge variant="gold">{ROLE_LABELS[u.role] ?? u.role}</Badge>
                 </div>
               </div>
               <div className="w-40">

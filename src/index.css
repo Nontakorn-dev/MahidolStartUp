@@ -38,6 +38,60 @@
 
 html { scroll-behavior: smooth; }
 
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* โฟกัสที่มองเห็นได้ชัดสำหรับการใช้คีย์บอร์ด */
+:where(a, button, input, select, textarea, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-ted-sky);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  z-index: 60;
+  border-radius: 8px;
+  background: var(--color-ink);
+  color: #fff;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 12px;
+}
+
+/* Skeleton ระหว่างโหลดข้อมูล */
+.skeleton {
+  border-radius: 8px;
+  background: linear-gradient(
+    90deg,
+    rgb(18 33 58 / 0.06) 25%,
+    rgb(18 33 58 / 0.11) 37%,
+    rgb(18 33 58 / 0.06) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+}
+
+@keyframes skeleton-shimmer {
+  from { background-position: 100% 50%; }
+  to { background-position: 0 50%; }
+}
+
 body {
   font-family: var(--font-body);
   color: var(--color-ink);
@@ -61,10 +115,17 @@ main {
 h1, h2, h3, h4 {
   font-family: var(--font-heading);
   font-weight: 600;
-  letter-spacing: 0.2px;
+  /* ภาษาไทยมีสระบน-ล่าง การถ่างตัวอักษรทำให้อ่านสะดุด */
+  letter-spacing: normal;
+  word-break: break-word;
 }
 
 .font-heading { font-family: var(--font-heading); }
+
+/*
+ * ใช้ฟอนต์ mono เฉพาะตัวเลข/ตัวอักษรอังกฤษเท่านั้น — IBM Plex Mono ไม่มีสระและ
+ * วรรณยุกต์ไทย ถ้าเอามาครอบข้อความไทยจะตกไปใช้ฟอนต์สำรองแล้วดูไม่เข้าพวก
+ */
 .font-mono { font-family: var(--font-mono); }
 
 .eyebrow {
@@ -72,9 +133,8 @@ h1, h2, h3, h4 {
   align-items: center;
   gap: 8px;
   font-family: var(--font-heading);
-  font-size: 12px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: 13px;
+  letter-spacing: 0.01em;
   color: var(--color-ted-blue);
   font-weight: 700;
 }
@@ -98,15 +158,24 @@ h1, h2, h3, h4 {
   background: var(--color-gold);
 }
 
+/*
+ * ใช้ padding-inline / padding-block แทน shorthand โดยเจตนา
+ *
+ * CSS ที่เขียนเองอยู่นอก layer จึงชนะ utility ของ Tailwind ที่อยู่ใน layer เสมอ
+ * ถ้า .wrap เขียน `padding: 0 20px` มันจะไปล้าง py-* / pt-* ที่ใส่บน element
+ * เดียวกันทิ้งทั้งหมด (PageHero เคยได้ padding บน-ล่าง = 0 เพราะเหตุนี้)
+ * และ .section-pad ที่เขียน `padding: 64px 0` ก็ล้าง padding ซ้าย-ขวาของ .wrap กลับ
+ * แยกเป็นคนละแกนแล้วทั้งสองคลาสจะทำงานร่วมกันได้โดยไม่ทับกัน
+ */
 .wrap {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
+  margin-inline: auto;
+  padding-inline: 20px;
 }
 
 @media (min-width: 768px) {
   .wrap {
-    padding: 0 28px;
+    padding-inline: 28px;
   }
 }
 
@@ -143,11 +212,11 @@ h1, h2, h3, h4 {
 
 /* Section spacing */
 .section-pad {
-  padding: 64px 0;
+  padding-block: 64px;
 }
 
 @media (min-width: 768px) {
-  .section-pad { padding: 88px 0; }
+  .section-pad { padding-block: 88px; }
 }
 
 /* Animations */
@@ -588,15 +657,14 @@ h1, h2, h3, h4 {
   font-family: var(--font-heading);
   font-size: clamp(1.65rem, 3vw, 2.1rem);
   font-weight: 600;
-  line-height: 1.25;
-  letter-spacing: -0.01em;
+  line-height: 1.35;
   color: var(--color-ink);
 }
 
 .flow-how__desc {
-  margin-top: 12px;
+  margin-top: 14px;
   font-size: 15px;
-  line-height: 1.7;
+  line-height: 1.8;
   color: var(--color-ink-soft);
   max-width: 36rem;
 }
@@ -681,7 +749,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-heading);
   font-size: 1.1rem;
   font-weight: 600;
-  line-height: 1.35;
+  line-height: 1.5;
   color: var(--color-ink);
 }
 
@@ -689,7 +757,7 @@ h1, h2, h3, h4 {
   margin-top: 8px;
   flex: 1;
   font-size: 14px;
-  line-height: 1.65;
+  line-height: 1.75;
   color: var(--color-ink-soft);
 }
 
@@ -730,10 +798,27 @@ h1, h2, h3, h4 {
   }
 }
 
-/* Prose */
+/* Prose — เนื้อหาบทความจาก CMS */
+.prose {
+  color: var(--color-ink-soft);
+}
+
+.prose > :first-child { margin-top: 0; }
+.prose > :last-child { margin-bottom: 0; }
+
 .prose h2 {
   font-family: var(--font-heading);
-  font-size: 1.25rem;
+  font-size: 1.35rem;
+  font-weight: 600;
+  line-height: 1.4;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--color-ink);
+}
+
+.prose h3 {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
   font-weight: 600;
   margin-top: 1.5rem;
   margin-bottom: 0.5rem;
@@ -741,21 +826,89 @@ h1, h2, h3, h4 {
 }
 
 .prose p {
-  margin-bottom: 0.75rem;
-  line-height: 1.7;
+  margin-bottom: 1rem;
+  line-height: 1.85;
   color: var(--color-ink-soft);
 }
 
-.prose ul {
-  list-style: disc;
+.prose ul,
+.prose ol {
   padding-left: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 1rem;
+  color: var(--color-ink-soft);
+}
+
+.prose ul { list-style: disc; }
+.prose ol { list-style: decimal; }
+
+.prose li {
+  margin-bottom: 0.35rem;
+  line-height: 1.8;
+}
+
+.prose li::marker { color: var(--color-gold); }
+
+.prose strong {
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+.prose blockquote {
+  margin: 1.5rem 0;
+  border-left: 3px solid var(--color-gold);
+  background: var(--color-flow-bg);
+  padding: 12px 20px;
+  border-radius: 0 10px 10px 0;
+  font-style: normal;
+}
+
+.prose blockquote p:last-child { margin-bottom: 0; }
+
+.prose img {
+  margin: 1.5rem 0;
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+  border: 1px solid var(--color-line);
+}
+
+.prose hr {
+  margin: 2rem 0;
+  border: 0;
+  border-top: 1px solid var(--color-line);
+}
+
+.prose code {
+  border-radius: 5px;
+  background: var(--color-flow-bg);
+  padding: 2px 6px;
+  font-family: var(--font-mono);
+  font-size: 0.9em;
+  color: var(--color-ink);
+}
+
+.prose pre {
+  margin-bottom: 1rem;
+  overflow-x: auto;
+  border-radius: 12px;
+  background: var(--color-ink);
+  padding: 16px 18px;
+  color: var(--color-hero-text-strong);
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+  color: inherit;
 }
 
 .prose a {
-  color: var(--color-ted-sky);
+  color: var(--color-ted-blue);
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
+
+.prose a:hover { color: var(--color-gold-deep); }
 
 /* Mobile menu overlay */
 .mobile-menu-overlay {
@@ -857,12 +1010,11 @@ h1, h2, h3, h4 {
   top: 14px;
   border-radius: 6px;
   background: var(--color-ink);
-  padding: 5px 10px;
-  font-family: var(--font-mono);
-  font-size: 10px;
+  padding: 6px 11px;
+  font-family: var(--font-heading);
+  font-size: 12px;
   font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  line-height: 1.6;
   color: var(--color-gold);
 }
 
@@ -882,10 +1034,9 @@ h1, h2, h3, h4 {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 500;
-  color: var(--color-ted-sky);
+  color: var(--color-ted-blue);
 }
 
 .news-card__title {
@@ -893,7 +1044,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-heading);
   font-size: 1.05rem;
   font-weight: 600;
-  line-height: 1.45;
+  line-height: 1.55;
   color: var(--color-ink);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -921,7 +1072,7 @@ h1, h2, h3, h4 {
   margin-top: 10px;
   flex: 1;
   font-size: 14px;
-  line-height: 1.65;
+  line-height: 1.75;
   color: var(--color-ink-soft);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1018,8 +1169,8 @@ h1, h2, h3, h4 {
 }
 
 @media (max-width: 640px) {
-  .wrap { padding: 0 16px; }
-  .section-pad { padding: 56px 0; }
+  .wrap { padding-inline: 16px; }
+  .section-pad { padding-block: 56px; }
 }
 
 /* ─── Event poster cards ─────────────────────────────────────────────────── */
@@ -1063,7 +1214,7 @@ h1, h2, h3, h4 {
   .event-card--featured .event-card__media {
     width: 52%;
     aspect-ratio: auto;
-    min-height: 340px;
+    align-self: stretch;
   }
 }
 
@@ -1093,12 +1244,11 @@ h1, h2, h3, h4 {
   top: 12px;
   border-radius: 6px;
   background: var(--color-gold);
-  padding: 5px 10px;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
+  padding: 6px 11px;
+  font-family: var(--font-heading);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
   color: var(--color-ink);
 }
 
@@ -1107,9 +1257,10 @@ h1, h2, h3, h4 {
   right: 12px;
   top: 12px;
   border-radius: 6px;
-  padding: 5px 10px;
-  font-size: 10px;
-  font-weight: 700;
+  padding: 6px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
   backdrop-filter: blur(6px);
 }
 
@@ -1143,11 +1294,10 @@ h1, h2, h3, h4 {
 .event-card__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 16px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  gap: 8px 16px;
+  font-size: 13px;
   font-weight: 500;
-  color: var(--color-ted-sky);
+  color: var(--color-ted-blue);
 }
 
 .event-card__title {
@@ -1155,7 +1305,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-heading);
   font-size: 1.1rem;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.5;
   color: var(--color-ink);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1177,7 +1327,7 @@ h1, h2, h3, h4 {
   margin-top: 8px;
   flex: 1;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.75;
   color: var(--color-ink-soft);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1188,6 +1338,12 @@ h1, h2, h3, h4 {
 .event-card--featured .event-card__desc {
   -webkit-line-clamp: 3;
   font-size: 15px;
+  /* การ์ดใหญ่สูงกว่าเนื้อหามาก ถ้าปล่อยให้ยืดจะเกิดช่องว่างกลางการ์ด */
+  flex: 0 0 auto;
+}
+
+.event-card--featured .event-card__chips {
+  margin-top: 18px;
 }
 
 .event-card__chips {
@@ -1202,14 +1358,14 @@ h1, h2, h3, h4 {
 .event-card__chip {
   border-radius: 999px;
   background: var(--color-flow-bg);
-  padding: 4px 11px;
-  font-size: 11px;
+  padding: 5px 12px;
+  font-size: 13px;
   font-weight: 500;
+  line-height: 1.5;
   color: var(--color-ink-soft);
   max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  /* ปล่อยให้ขึ้นบรรทัดใหม่ ดีกว่าตัดกลางคำเป็น "กิจกรรม Startup & Inn..." */
+  overflow-wrap: anywhere;
 }
 
 .event-card__cta {
@@ -1305,10 +1461,10 @@ h1, h2, h3, h4 {
   left: 10px;
   top: 10px;
   border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
 }
 
 .listing-card__status {
@@ -1316,9 +1472,10 @@ h1, h2, h3, h4 {
   right: 10px;
   top: 10px;
   border-radius: 6px;
-  padding: 4px 10px;
-  font-size: 10px;
-  font-weight: 700;
+  padding: 5px 11px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.6;
 }
 
 .listing-card__body {
@@ -1332,7 +1489,7 @@ h1, h2, h3, h4 {
   font-family: var(--font-heading);
   font-size: 1rem;
   font-weight: 600;
-  line-height: 1.4;
+  line-height: 1.55;
   color: var(--color-ink);
   display: -webkit-box;
   -webkit-line-clamp: 1;
@@ -1344,7 +1501,7 @@ h1, h2, h3, h4 {
   margin-top: 8px;
   flex: 1;
   font-size: 13px;
-  line-height: 1.6;
+  line-height: 1.75;
   color: var(--color-ink-soft);
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -1362,9 +1519,10 @@ h1, h2, h3, h4 {
 .listing-card__chip {
   border-radius: 999px;
   background: var(--color-flow-bg);
-  padding: 3px 10px;
-  font-size: 11px;
+  padding: 4px 11px;
+  font-size: 12px;
   font-weight: 500;
+  line-height: 1.5;
   color: var(--color-ink-soft);
 }
 
@@ -1440,9 +1598,10 @@ h1, h2, h3, h4 {
   border-radius: 999px;
   border: 1.5px solid var(--color-line);
   background: var(--color-paper);
-  padding: 6px 14px;
-  font-size: 12px;
-  font-weight: 600;
+  padding: 7px 15px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.6;
   color: var(--color-ink-soft);
   cursor: pointer;
   transition: all 0.15s;

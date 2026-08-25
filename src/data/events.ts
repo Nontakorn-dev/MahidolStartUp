@@ -1,12 +1,14 @@
+export type ClubEventStatus = 'open' | 'upcoming' | 'closed'
+
 export interface ClubEvent {
   id: string
   slug: string
   title: string
   shortTitle: string
   tagline: string
-  coverImage: string
+  coverImage: string | null
   category: string
-  status: 'open' | 'upcoming' | 'closed'
+  status: ClubEventStatus
   deadline: string
   deadlineLabel: string
   startAt: string
@@ -17,6 +19,9 @@ export interface ClubEvent {
   eligibility?: string[]
   roles?: string[]
   organizer: string
+  /** เนื้อหาแบบ rich text สำหรับกิจกรรมที่สร้างจาก CMS */
+  richBody?: Record<string, unknown> | null
+  source?: 'curated' | 'cms'
 }
 
 export const CLUB_EVENTS: ClubEvent[] = [
@@ -27,7 +32,7 @@ export const CLUB_EVENTS: ClubEvent[] = [
     shortTitle: 'Talent Accelerator',
     tagline: 'เปิดรับสมัคร Core Team รุ่นใหม่ — ปีแรกที่ได้ร่วมปฏิบัติงานกับ iNT Mahidol',
     coverImage: '/content/TalentAcceleratorProgram.png',
-    category: 'Core Team',
+    category: 'รับสมัครทีม',
     status: 'open',
     deadline: '2026-12-31',
     deadlineLabel: 'เปิดรับสมัครแล้ว',
@@ -55,7 +60,7 @@ export const CLUB_EVENTS: ClubEvent[] = [
     shortTitle: 'Startup Thailand League',
     tagline: 'เวทีแข่งขัน Startup สำหรับนักศึกษามหิดล — ทุนต่อยอด เมนเทอร์ และเครือข่าย',
     coverImage: '/content/STL2025-01.jpg',
-    category: 'Competition',
+    category: 'การแข่งขัน',
     status: 'open',
     deadline: '2026-03-15',
     deadlineLabel: 'สมัครถึง 15 มี.ค. 2569',
@@ -86,7 +91,7 @@ export const CLUB_EVENTS: ClubEvent[] = [
     shortTitle: 'TED Youth Startup',
     tagline: 'ทุนพัฒนาไอเดียและต้นแบบสูงสุด 1.5 ล้านบาท สำหรับนิสิต–นักศึกษา และบัณฑิตจบใหม่',
     coverImage: '/content/Mahidol-TED.jpg',
-    category: 'Funding',
+    category: 'ทุนสนับสนุน',
     status: 'open',
     deadline: '2026-02-28',
     deadlineLabel: 'สมัครถึง 28 ก.พ. 2569',
@@ -115,7 +120,7 @@ export const CLUB_EVENTS: ClubEvent[] = [
     shortTitle: 'Blue Horizon',
     tagline: 'Mahidol Incubation Program 2026 — เชื่อมคน เทคโนโลยี และโอกาสทางธุรกิจ',
     coverImage: '/content/BlueHorizon.jpeg',
-    category: 'Incubation',
+    category: 'บ่มเพาะธุรกิจ',
     status: 'open',
     deadline: '2026-06-20',
     deadlineLabel: 'สมัครถึง 20 มิ.ย. 2569',
@@ -141,13 +146,51 @@ export const CLUB_EVENTS: ClubEvent[] = [
   },
 ]
 
+/** เที่ยงคืนของวันนี้ — กิจกรรมที่ปิดรับ "วันนี้" ยังถือว่าเปิดอยู่ */
+function startOfToday() {
+  const d = new Date()
+  d.setHours(0, 0, 0, 0)
+  return d.getTime()
+}
+
+export function isPastDeadline(event: ClubEvent) {
+  const deadline = new Date(event.deadline).getTime()
+  return Number.isFinite(deadline) && deadline < startOfToday()
+}
+
+/**
+ * สถานะที่ใช้แสดงผลจริง — ถ้าเลยกำหนดรับสมัครไปแล้วต้องขึ้น "ปิดรับแล้ว"
+ * ไม่ว่าข้อมูลต้นทางจะเขียนไว้ว่า open หรือไม่
+ */
+export function effectiveStatus(event: ClubEvent): ClubEventStatus {
+  return isPastDeadline(event) ? 'closed' : event.status
+}
+
+/**
+ * ข้อความวันที่ที่จะแสดง — deadlineLabel ที่เขียนไว้มีคำว่า "สมัครถึง..." อยู่แล้ว
+ * ถ้าโครงการปิดไปแล้วต้องเปลี่ยนเป็นวันที่ล้วน ไม่งั้นจะได้ "ปิดรับเมื่อ สมัครถึง 20 มิ.ย."
+ */
+export function deadlineDisplay(event: ClubEvent, formatter: (d: string) => string) {
+  if (!isPastDeadline(event)) return event.deadlineLabel
+  const date = new Date(event.deadline)
+  return Number.isFinite(date.getTime())
+    ? `ปิดรับเมื่อ ${formatter(event.deadline)}`
+    : event.deadlineLabel
+}
+
+/** เรียงกิจกรรมที่ยังเปิดอยู่ก่อน (ใกล้ปิดรับสุดขึ้นก่อน) แล้วตามด้วยที่ผ่านมาแล้ว */
+export function sortEvents(events: ClubEvent[]) {
+  const time = (e: ClubEvent) => new Date(e.deadline).getTime() || 0
+  const active = events.filter((e) => !isPastDeadline(e)).sort((a, b) => time(a) - time(b))
+  const past = events.filter(isPastDeadline).sort((a, b) => time(b) - time(a))
+  return { active, past, all: [...active, ...past] }
+}
+
 export function getEventBySlug(slug: string) {
   return CLUB_EVENTS.find((e) => e.slug === slug)
 }
 
 export function getUpcomingEvents(limit?: number) {
-  const sorted = [...CLUB_EVENTS].sort(
-    (a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime(),
-  )
-  return limit ? sorted.slice(0, limit) : sorted
+  const { all } = sortEvents(CLUB_EVENTS)
+  return limit ? all.slice(0, limit) : all
 }

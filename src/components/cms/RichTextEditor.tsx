@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
@@ -9,6 +10,10 @@ interface RichTextEditorProps {
   content: Record<string, unknown>
   onChange: (content: Record<string, unknown>) => void
   placeholder?: string
+}
+
+function isEmptyDoc(content: Record<string, unknown> | null | undefined) {
+  return !content || Object.keys(content).length === 0
 }
 
 export function RichTextEditor({ content, onChange, placeholder }: RichTextEditorProps) {
@@ -23,6 +28,18 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
       onChange(editor.getJSON() as Record<string, unknown>)
     },
   })
+
+  /**
+   * useEditor สร้าง instance ครั้งเดียว ไม่ตามค่า content ที่เปลี่ยนทีหลัง
+   * ตอนแก้ไขบทความเดิม content จะโหลดมาหลัง editor ถูกสร้าง — ถ้าไม่ sync ตรงนี้
+   * ทีม PR จะเปิดหน้าแก้ไขแล้วเห็นช่องเนื้อหาว่างเปล่าทั้งที่บทความมีเนื้อหาอยู่
+   */
+  const hydrated = useRef(false)
+  useEffect(() => {
+    if (!editor || hydrated.current || isEmptyDoc(content)) return
+    hydrated.current = true
+    editor.commands.setContent(content, { emitUpdate: false })
+  }, [editor, content])
 
   if (!editor) return null
 
@@ -40,7 +57,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
       onClick={onClick}
       className={cn(
         'rounded-lg p-1.5 transition-colors',
-        active ? 'bg-mu-navy text-white' : 'text-gray-600 hover:bg-gray-100',
+        active ? 'bg-ink text-white' : 'text-ink-soft hover:bg-paper',
       )}
     >
       {children}
@@ -48,8 +65,8 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
   )
 
   return (
-    <div className="overflow-hidden rounded-xl border border-gray-200">
-      <div className="flex flex-wrap gap-1 border-b border-gray-200 bg-gray-50 p-2">
+    <div className="overflow-hidden rounded-xl border border-line">
+      <div className="flex flex-wrap gap-1 border-b border-line bg-paper p-2">
         <ToolbarButton onClick={() => editor.chain().focus().toggleBold().run()} active={editor.isActive('bold')}>
           <Bold className="h-4 w-4" />
         </ToolbarButton>
@@ -89,6 +106,12 @@ export function RichTextContent({ content }: { content: Record<string, unknown> 
     content,
     editable: false,
   })
+
+  useEffect(() => {
+    if (editor && !isEmptyDoc(content)) {
+      editor.commands.setContent(content, { emitUpdate: false })
+    }
+  }, [editor, content])
 
   if (!editor) return null
   return (

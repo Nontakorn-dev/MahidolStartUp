@@ -53,34 +53,44 @@ export function ProfileSettingsPage() {
   })
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-12 sm:px-6">
-      <h1 className="mb-6 text-2xl font-bold text-mu-navy">ตั้งค่าโปรไฟล์</h1>
+    <div className="wrap section-pad">
+      <div className="mx-auto max-w-2xl">
+        <h1 className="mb-6 font-heading text-2xl text-ink">ตั้งค่าโปรไฟล์</h1>
 
-      <Card className="mb-6 space-y-4">
-        <Input label="ชื่อ-นามสกุล" value={fullName} onChange={(e) => setFullName(e.target.value)} />
-        <Textarea label="Bio" value={bio} onChange={(e) => setBio(e.target.value)} />
-        <Select
-          label="สังกัด"
-          value={affiliation}
-          onChange={(v) => setAffiliation(v as Affiliation)}
-          options={Object.entries(AFFILIATION_LABELS).map(([value, label]) => ({ value, label }))}
-        />
-        <Input label="คณะ/สาขา" value={faculty} onChange={(e) => setFaculty(e.target.value)} />
-        <Input label="Line ID" placeholder="สำหรับแสดงหลัง match accept" value={lineId} onChange={(e) => setLineId(e.target.value)} />
-        <Input label="LinkedIn URL" value={linkedinUrl} onChange={(e) => setLinkedinUrl(e.target.value)} />
-        <Button onClick={() => mutation.mutate()} disabled={mutation.isPending}>
-          {saved ? 'บันทึกแล้ว ✓' : mutation.isPending ? 'กำลังบันทึก...' : 'บันทึก'}
-        </Button>
-      </Card>
+        <Card className="mb-6 space-y-4">
+          <Input label="ชื่อ-นามสกุล" value={fullName} onChange={(e) => setFullName(e.target.value)} />
+          <Textarea label="Bio" value={bio} onChange={(e) => setBio(e.target.value)} />
+          <Select
+            label="สังกัด"
+            value={affiliation}
+            onChange={(v) => setAffiliation(v as Affiliation)}
+            options={Object.entries(AFFILIATION_LABELS).map(([value, label]) => ({ value, label }))}
+          />
+          <Input label="คณะ/สาขา" value={faculty} onChange={(e) => setFaculty(e.target.value)} />
+          <Input
+            label="Line ID"
+            hint="จะแสดงให้อีกฝ่ายเห็นก็ต่อเมื่อตอบรับคำขอเชื่อมต่อกันแล้วเท่านั้น"
+            value={lineId}
+            onChange={(e) => setLineId(e.target.value)}
+          />
+          <Input label="LinkedIn URL" value={linkedinUrl} onChange={(e) => setLinkedinUrl(e.target.value)} />
+          <Button onClick={() => mutation.mutate()} disabled={mutation.isPending}>
+            {saved ? 'บันทึกแล้ว ✓' : mutation.isPending ? 'กำลังบันทึก...' : 'บันทึก'}
+          </Button>
+        </Card>
 
-      <Card>
-        <h2 className="mb-3 font-semibold text-mu-navy">โปรไฟล์ Matching</h2>
-        <div className="flex flex-wrap gap-2">
-          <Link to="/match/startup/new"><Button variant="outline" size="sm">สร้าง Startup Profile</Button></Link>
-          <Link to="/match/mentor/new"><Button variant="outline" size="sm">สร้าง Mentor Profile</Button></Link>
-          <Link to="/match/connections"><Button variant="ghost" size="sm">ดูการเชื่อมต่อ</Button></Link>
-        </div>
-      </Card>
+        <Card>
+          <h2 className="font-heading text-lg text-ink">โปรไฟล์สำหรับหาพาร์ทเนอร์</h2>
+          <p className="mb-4 mt-1.5 text-sm leading-relaxed text-ink-soft">
+            สร้างโปรไฟล์เพิ่มเพื่อให้คนอื่นค้นเจอคุณในหน้าค้นหา Partner
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <Link to="/match/startup/new"><Button variant="outline" size="sm">สร้าง Startup Profile</Button></Link>
+            <Link to="/match/mentor/new"><Button variant="outline" size="sm">สร้าง Mentor Profile</Button></Link>
+            <Link to="/match/connections"><Button variant="ghost" size="sm">ดูการเชื่อมต่อ</Button></Link>
+          </div>
+        </Card>
+      </div>
     </div>
   )
 }

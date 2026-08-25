@@ -5,6 +5,7 @@ import { useTagOptions, tagLabel } from '../../lib/msc-tags'
 import { SectionHeader } from '../ui/SectionHeader'
 import { CategoryFilterBar } from '../ui/CategoryFilterBar'
 import { ListingCard, ListingCardGrid, ListingEmptyState } from '../ui/ListingCard'
+import { CardGridSkeleton } from '../ui/Skeleton'
 import { excerpt, tiptapToText } from '../../lib/utils'
 import type { Post } from '../../types'
 import type { StartupIntake } from '../../types/msc-connect'
@@ -18,8 +19,8 @@ interface FeaturedStartupsSectionProps {
 }
 
 export function FeaturedStartupsSection({
-  title = 'Startup ที่กำลังโต',
-  description = 'ทีมจาก Mahidol Incubation Program และ ecosystem ของ iNT — ตัวอย่างสไตล์ pitch ที่ดี',
+  title = 'ทีมที่กำลังมองหาพาร์ทเนอร์',
+  description = 'ทีมนักศึกษาและศิษย์เก่าที่ลงทะเบียนไว้กับ MSC Connect และเปิดรับคนมาร่วมงานอยู่ตอนนี้',
   actionHref,
   limit = 6,
 }: FeaturedStartupsSectionProps) {
@@ -27,12 +28,13 @@ export function FeaturedStartupsSection({
   const { data: industryTags = [] } = useTagOptions('industry')
   const [filter, setFilter] = useState('')
 
-  const { data: startups = [] } = useQuery({
-    queryKey: ['featured-startups-public'],
+  const { data: startups = [], isLoading: loadingStartups } = useQuery({
+    queryKey: ['featured-startups-public', limit],
     queryFn: async () => {
       const { data } = await supabase
         .from('startups')
-        .select('*')
+        // ไม่ดึง contact_email / contact_line — เป็นข้อมูลติดต่อที่ห้ามขึ้นหน้า public
+        .select('id, startup_name, one_line_pitch, industry_tags, stage, need_tags')
         .eq('consent_public_directory', true)
         .eq('status', 'active')
         .order('created_at', { ascending: false })
@@ -41,7 +43,7 @@ export function FeaturedStartupsSection({
     },
   })
 
-  const { data: featuredPosts = [] } = useQuery({
+  const { data: featuredPosts = [], isLoading: loadingPosts } = useQuery({
     queryKey: ['featured-startup-posts'],
     queryFn: async () => {
       const { data } = await supabase
@@ -75,6 +77,7 @@ export function FeaturedStartupsSection({
 
   const items = showPosts ? filteredPosts : filteredStartups
   const isEmpty = items.length === 0
+  const isLoading = loadingStartups || (startups.length === 0 && loadingPosts)
 
   return (
     <section className="section-pad border-y border-line bg-ted-mist/50" id="featured">
@@ -95,8 +98,16 @@ export function FeaturedStartupsSection({
           />
         )}
 
-        {isEmpty ? (
-          <ListingEmptyState message="Coming soon" />
+        {isLoading ? (
+          <CardGridSkeleton count={3} />
+        ) : isEmpty ? (
+          <ListingEmptyState
+            message={
+              filter
+                ? 'ยังไม่มีทีมในหมวดนี้ — ลองเลือกหมวดอื่นดู'
+                : 'ทีมกำลังรวบรวมโปรไฟล์ Startup ชุดแรก — เร็ว ๆ นี้'
+            }
+          />
         ) : (
           <ListingCardGrid>
             {showPosts
@@ -107,8 +118,7 @@ export function FeaturedStartupsSection({
                     title={post.title}
                     description={excerpt(tiptapToText(post.content), 100)}
                     imageUrl={post.cover_image_url}
-                    categoryTag="Featured"
-                    categoryKey="healthtech"
+                    categoryTag="Startup แนะนำ"
                     chips={post.tags?.slice(0, 2) ?? []}
                   />
                 ))

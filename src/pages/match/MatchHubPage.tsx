@@ -11,12 +11,12 @@ export function MatchHubPage() {
         eyebrow="MSC Connect"
         title={
           <>
-            เชื่อมไอเดียของคุณ
+            หาคนที่ใช่
             <br />
-            เข้ากับ<span className="text-gold"> คนที่ใช่</span>
+            มา<span className="text-gold">ร่วมทางกับคุณ</span>
           </>
         }
-        description="จากห้องเรียนสู่ตลาดจริง — Mahidol Startup Club ช่วยจับคู่ Startup กับ Mentor, นักลงทุน และ Partner ตลอดทั้งปี ไม่ใช่แค่ช่วง Demo Day"
+        description="ชมรมช่วยจับคู่ทีมนักศึกษากับเมนเทอร์ นักลงทุน และพาร์ทเนอร์ ทำได้ตลอดปี ไม่ต้องรอถึงวัน Demo Day"
       >
         <div className="flex flex-wrap gap-3">
           <Link to="/register/startup" className="btn-accent">
@@ -31,15 +31,15 @@ export function MatchHubPage() {
       <section className="wrap section-pad !pt-12">
         <SectionHeader
           eyebrow="ทำไมต้อง MSC Connect"
-          title="ความต้องการมีจริง — ecosystem มหิดลพิสูจน์แล้ว"
-          description="iNT มหิดลจัด Business Matching และ Incubation Program อย่างต่อเนื่อง (เช่น MU InnoMatch, Mahidol Incubation Program) ชมรมเราทำให้กระบวนการนี้เกิดได้ตลอดปีในระดับนักศึกษา"
+          title="จับคู่ได้ทั้งปี ไม่ต้องรอรอบโครงการ"
+          description="iNT มหิดลจัด Business Matching และโครงการบ่มเพาะอยู่แล้ว อย่าง MU InnoMatch และ Mahidol Incubation Program แต่เปิดเป็นรอบ ๆ ชมรมเลยทำช่องทางนี้ขึ้นมาให้ทีมนักศึกษาหาพาร์ทเนอร์ได้ตลอดปี"
         />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[
-            { step: '01', title: 'กรอกฟอร์ม', desc: 'ไม่ต้อง login — ใช้เวลาไม่เกิน 5 นาที' },
-            { step: '02', title: 'ทีมตรวจสอบ', desc: 'Core Team ดูข้อมูลและค้นหา Partner ที่ fit' },
-            { step: '03', title: 'จับคู่', desc: 'แนะนำตัวให้ทั้งสองฝ่ายภายใน 7 วัน' },
-            { step: '04', title: 'Follow-up', desc: 'ติดตามผลและปรับปรุงการจับคู่' },
+            { step: '01', title: 'กรอกฟอร์ม', desc: 'ไม่ต้องสมัครสมาชิก ใช้เวลาไม่เกิน 5 นาที' },
+            { step: '02', title: 'ทีมงานอ่าน', desc: 'Core Team ดูข้อมูลแล้วมองหาคนที่เข้ากับทีมคุณ' },
+            { step: '03', title: 'แนะนำให้รู้จัก', desc: 'พาทั้งสองฝ่ายมาเจอกันภายใน 7 วันทำการ' },
+            { step: '04', title: 'ตามผลให้', desc: 'ถามความคืบหน้า ถ้ายังไม่ลงตัวก็ช่วยหาคนใหม่' },
           ].map((item) => (
             <div key={item.step} className="card-elevated p-6 text-center">
               <span className="font-mono text-3xl font-medium text-gold/40">{item.step}</span>
@@ -50,21 +50,21 @@ export function MatchHubPage() {
         </div>
       </section>
 
-      <FeaturedStartupsSection actionHref="/news" />
+      <FeaturedStartupsSection actionHref="/match/discover" />
 
       <section className="section-pad bg-gradient-to-b from-ted-light/35 to-ted-mist/20">
         <div className="wrap text-center">
           <Sparkles className="mx-auto mb-4 h-10 w-10 text-gold" />
-          <h2 className="font-heading text-2xl text-ink">พร้อมเริ่มต้นแล้วหรือยัง?</h2>
-          <p className="mx-auto mt-3 max-w-md text-ink-soft">
-            ไม่ว่าคุณจะมี Startup หรืออยากช่วยเหลือทีมนักศึกษา — เริ่มได้วันนี้
+          <h2 className="font-heading text-2xl text-ink">เริ่มวันนี้เลยก็ได้</h2>
+          <p className="mx-auto mt-3 max-w-md leading-relaxed text-ink-soft">
+            มีทีมอยู่แล้วก็มาหาพาร์ทเนอร์ อยากช่วยทีมนักศึกษาก็มาเป็นเมนเทอร์ได้
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Link to="/register/startup" className="btn-primary">
               เริ่มต้นหาพาร์ทเนอร์ของคุณ
             </Link>
             <Link to="/match/discover" className="btn-secondary">
-              <Search className="h-4 w-4" /> ค้นหา Partner (สมาชิก)
+              <Search className="h-4 w-4" /> ดูใครอยู่ในเครือข่ายบ้าง
             </Link>
           </div>
         </div>

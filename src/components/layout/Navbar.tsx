@@ -15,12 +15,6 @@ const navLinks = [
   { to: '/about', label: 'เกี่ยวกับเรา' },
 ]
 
-const homeAnchors = [
-  { href: '#matching', label: 'ขั้นตอนใช้งาน' },
-  { href: '#events', label: 'กิจกรรม' },
-  { href: '#join', label: 'ติดต่อ' },
-]
-
 function useNotifications() {
   const { user } = useAuth()
   return useQuery({
@@ -39,8 +33,30 @@ function useNotifications() {
   })
 }
 
-function HeaderBrand() {
-  return <BrandLogo linkToHome size="nav" />
+/** โลโก้เต็มตอนอยู่บนสุด แล้วย่อลงเมื่อเลื่อนหน้า เพื่อให้แถบเมนูติดบนได้โดยไม่กินจอ */
+const COMPACT_LOGO = 'h-11 max-w-[220px] sm:h-12 sm:max-w-[260px] md:h-14 md:max-w-[300px] lg:h-14 lg:max-w-[320px]'
+
+function HeaderBrand({ compact = false }: { compact?: boolean }) {
+  return (
+    <BrandLogo
+      linkToHome
+      size="nav"
+      imageClassName={cn('transition-all duration-300', compact && COMPACT_LOGO)}
+    />
+  )
+}
+
+function useScrolled(threshold = 24) {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > threshold)
+    onScroll()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [threshold])
+
+  return scrolled
 }
 
 function HeaderSocialLinks({ className }: { className?: string }) {
@@ -193,7 +209,7 @@ function MobileAuth({
 function MobileSocialLinks() {
   return (
     <div className="mt-6 border-t border-line pt-4">
-      <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-ink-soft">ติดตามเรา</p>
+      <p className="mb-3 text-sm font-semibold text-ink-soft">ติดตามเรา</p>
       <div className="flex gap-2">
         <a
           href={SOCIAL_LINKS.line}
@@ -218,89 +234,34 @@ function MobileSocialLinks() {
   )
 }
 
-export function HomeHeroNav() {
-  const [open, setOpen] = useState(false)
-  const { user, profile, signOut } = useAuth()
-  const { data: unreadCount = 0 } = useNotifications()
-  const isAdmin = !!(profile && ['pr', 'core_team', 'admin'].includes(profile.role))
-
-  return (
-    <>
-      <div className="flex items-center justify-between gap-3 py-3 md:gap-4 md:py-4">
-        <HeaderBrand />
-
-        <nav className="hidden items-center gap-0.5 lg:flex">
-          {homeAnchors.map((a) => (
-            <a key={a.href} href={a.href} className={cn(siteNavLink, siteNavIdle)}>
-              {a.label}
-            </a>
-          ))}
-        </nav>
-
-        <div className="hidden items-center gap-2 lg:flex">
-          <HeaderSocialLinks />
-          <div className="mx-1 h-6 w-px bg-line" />
-          <AuthLinks user={user} profile={profile} isAdmin={isAdmin} unreadCount={unreadCount} />
-        </div>
-
-        <button
-          className="rounded-xl p-2.5 text-ink hover:bg-flow-bg lg:hidden"
-          onClick={() => setOpen(true)}
-          aria-label="เมนู"
-        >
-          <Menu className="h-6 w-6" />
-        </button>
-      </div>
-
-      <MobileDrawer open={open} onClose={() => setOpen(false)}>
-        <nav className="space-y-1">
-          {homeAnchors.map((a) => (
-            <a
-              key={a.href}
-              href={a.href}
-              onClick={() => setOpen(false)}
-              className="block rounded-lg px-3 py-3.5 text-base font-medium text-ink no-underline hover:bg-ted-light"
-            >
-              {a.label}
-            </a>
-          ))}
-        </nav>
-        <div className="mt-4 border-t border-line pt-4">
-          <MobileAuth user={user} isAdmin={isAdmin} onClose={() => setOpen(false)} signOut={signOut} />
-        </div>
-        <MobileSocialLinks />
-      </MobileDrawer>
-    </>
-  )
-}
-
 export function SiteNavbar() {
   const [open, setOpen] = useState(false)
-  const [scrolled, setScrolled] = useState(false)
   const { user, profile, signOut } = useAuth()
   const location = useLocation()
   const { data: unreadCount = 0 } = useNotifications()
   const isAdmin = !!(profile && ['pr', 'core_team', 'admin'].includes(profile.role))
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  const scrolled = useScrolled()
 
   return (
     <>
+      <a href="#main-content" className="skip-link">ข้ามไปยังเนื้อหาหลัก</a>
+
       <header
         className={cn(
-          'sticky top-0 z-40 transition-all duration-300',
+          'sticky top-0 z-40 border-b transition-all duration-300',
           scrolled
-            ? 'border-b border-line bg-surface/98 shadow-nav backdrop-blur-md'
-            : 'border-b border-line bg-surface',
+            ? 'border-line/70 bg-surface/90 shadow-nav backdrop-blur-md'
+            : 'border-line/70 bg-gradient-to-b from-ted-light/70 via-ted-mist/40 to-surface',
         )}
       >
         <div className="wrap">
-          <div className="flex items-center justify-between gap-3 py-3 md:gap-4 md:py-4">
-            <HeaderBrand />
+          <div
+            className={cn(
+              'flex items-center justify-between gap-3 transition-all duration-300 md:gap-4',
+              scrolled ? 'py-2 md:py-2.5' : 'py-3 md:py-4',
+            )}
+          >
+            <HeaderBrand compact={scrolled} />
 
             <nav className="hidden items-center gap-0.5 lg:flex">
               {navLinks.map((link) => {

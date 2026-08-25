@@ -24,13 +24,13 @@ export function PageHero({
           : 'border-line bg-surface',
       )}
     >
-      <div className="wrap relative py-10 md:py-14">
+      <div className="wrap relative py-12 md:py-16">
         {eyebrow && (
           <div className={cn('eyebrow', isDark && 'eyebrow-light')}>{eyebrow}</div>
         )}
         <h1
           className={cn(
-            'mt-2 font-heading text-3xl md:text-4xl',
+            'mt-3.5 font-heading text-3xl leading-[1.3] md:text-4xl md:leading-[1.25]',
             isDark ? 'text-white' : 'text-ink',
           )}
         >
@@ -39,14 +39,14 @@ export function PageHero({
         {description && (
           <p
             className={cn(
-              'mt-3 max-w-2xl text-base leading-relaxed md:text-lg',
+              'mt-4 max-w-2xl text-base leading-[1.8] md:text-lg',
               isDark ? 'text-hero-text' : 'text-ink-soft',
             )}
           >
             {description}
           </p>
         )}
-        {children && <div className="mt-6">{children}</div>}
+        {children && <div className="mt-8">{children}</div>}
       </div>
     </div>
   )
