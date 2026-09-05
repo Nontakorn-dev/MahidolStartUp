@@ -19,8 +19,8 @@ interface FeaturedStartupsSectionProps {
 }
 
 export function FeaturedStartupsSection({
-  title = 'ทีมที่กำลังมองหาพาร์ทเนอร์',
-  description = 'ทีมนักศึกษาและศิษย์เก่าที่ลงทะเบียนไว้กับ MSC Connect และเปิดรับคนมาร่วมงานอยู่ตอนนี้',
+  title = 'คนที่กำลังมองหาทีมอยู่ตอนนี้',
+  description = 'หาเพื่อนร่วมทีม เมนเทอร์ หรือพาร์ทเนอร์ แล้วเริ่มสร้างด้วยกัน',
   actionHref,
   limit = 6,
 }: FeaturedStartupsSectionProps) {

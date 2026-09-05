@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Sparkles, UserRound, Search, Send, Handshake } from 'lucide-react'
-import { HomeCtaFooter } from '../../components/layout/Footer'
+import { ArrowRight, UserRound, Search, Send, Handshake } from 'lucide-react'
+import { HomeCtaSection } from '../../components/layout/Footer'
 import { NetworkDiagram } from '../../components/home/NetworkDiagram'
 import { SectionHeader } from '../../components/ui/SectionHeader'
 import { EventCardGrid } from '../../components/ui/EventCard'
@@ -49,32 +49,32 @@ export function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <header className="relative overflow-hidden border-b border-line bg-gradient-to-b from-ted-light/70 via-ted-mist/40 to-surface">
+      <header className="relative overflow-hidden bg-gradient-to-b from-paper via-surface to-ted-mist/70">
         <div className="wrap relative">
-          <div className="grid items-center gap-8 pb-10 pt-8 md:grid-cols-2 md:gap-12 md:pb-14 md:pt-10 lg:pb-16">
-            <div className="order-1 -mx-1 animate-fade-up md:order-2 md:mx-0">
-              <NetworkDiagram />
-            </div>
-
-            <div className="order-2 animate-fade-up animate-delay-1 text-center md:order-1 md:text-left">
-              <div className="eyebrow">ก่อตั้งปี 2561 · สนับสนุนโดย iNT มหาวิทยาลัยมหิดล</div>
-              <h1 className="mt-3 font-heading text-[clamp(1.75rem,5.5vw,2.85rem)] leading-[1.32] text-ink md:mt-4">
-                จากไอเดียในห้องเรียน
+          <div className="home-hero grid items-center gap-6 pb-8 pt-4 sm:gap-8 sm:pb-10 sm:pt-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 lg:pb-16 lg:pt-8 xl:gap-16">
+            <div className="home-hero__copy order-1 animate-fade-up text-center lg:text-left">
+              <div className="eyebrow eyebrow--plain">Supported by iNT Mahidol</div>
+              <h1 className="home-hero__title">
+                Find your people.
                 <br />
-                สู่<span className="text-gold-deep">สตาร์ตอัพจริง</span>
+                <span className="text-ted-blue">Start building.</span>
               </h1>
-              <p className="mx-auto mt-4 max-w-md text-[15px] leading-[1.8] text-ink-soft md:mx-0 md:mt-5 md:text-[17px]">
-                ชมรมสตาร์ตอัพของมหาวิทยาลัยมหิดล รวมกิจกรรม ข่าวสาร และการหาพาร์ทเนอร์ไว้ที่เดียว
-                เปิดให้ทั้งคนมหิดลและคนนอกเข้าร่วมได้ตลอดปี
+              <p className="home-hero__desc">
+                ชมรมสตาร์ตอัพมหาวิทยาลัยมหิดล สำหรับคนที่อยากลงมือทำจริง มีคนซัพพอร์ต
+                และได้เจอเพื่อนร่วมทาง — ไม่ใช่แค่ฟังแล้วกลับบ้าน
               </p>
-              <div className="mt-7 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:justify-center md:justify-start">
-                <Link to="/register/startup" className="btn-accent justify-center">
-                  <Sparkles className="h-4 w-4" /> ฉันมี Startup
+              <div className="home-hero__actions">
+                <Link to="/match/discover" className="btn-accent">
+                  หาเพื่อนร่วมทีม
                 </Link>
-                <Link to="/register/partner" className="btn-secondary justify-center">
-                  ฉันอยากเป็น Mentor/Partner
+                <Link to="/events" className="btn-secondary">
+                  สำรวจกิจกรรม
                 </Link>
               </div>
+            </div>
+
+            <div className="home-hero__visual order-2 animate-fade-up animate-delay-1">
+              <NetworkDiagram />
             </div>
           </div>
         </div>
@@ -88,9 +88,9 @@ export function HomePage() {
           <div className="flow-how">
             <div className="flow-how__header">
               <div className="eyebrow">MSC Connect</div>
-              <h2 className="flow-how__title">หาพาร์ทเนอร์ยังไง</h2>
+              <h2 className="flow-how__title">เริ่มเชื่อมต่อยังไง</h2>
               <p className="flow-how__desc">
-                สี่ขั้นตอน ตั้งแต่กรอกข้อมูลจนได้เริ่มคุยกับคนที่ใช่ ไม่ต้องรอรอบโครงการ
+                สี่ขั้น ตั้งแต่บอกว่าคุณคือใคร จนได้คุยกับคนที่ใช่ ไม่ต้องรอรอบโครงการ
               </p>
             </div>
 
@@ -121,7 +121,7 @@ export function HomePage() {
         <div className="wrap">
           <SectionHeader
             eyebrow="กิจกรรมและโครงการ"
-            title={showingPast ? 'โครงการที่ผ่านมา' : 'กำลังเปิดรับสมัคร'}
+            title={showingPast ? 'โครงการที่ผ่านมา' : 'สนามจริงให้ลงมือทำ'}
             description={
               showingPast
                 ? 'ตอนนี้ยังไม่มีรอบที่เปิดรับสมัคร ระหว่างนี้ดูโครงการที่ผ่านมาไปพลางก่อนได้'
@@ -140,7 +140,7 @@ export function HomePage() {
 
       <FeaturedStartupsSection actionHref="/match/discover" />
 
-      <HomeCtaFooter />
+      <HomeCtaSection />
     </div>
   )
 }

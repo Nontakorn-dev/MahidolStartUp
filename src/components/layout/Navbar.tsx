@@ -60,7 +60,7 @@ function useScrolled(threshold = 24) {
 }
 
 function HeaderSocialLinks({ className }: { className?: string }) {
-  const iconClass = 'flex h-9 w-9 items-center justify-center rounded-lg no-underline transition-opacity hover:bg-ted-light/60 hover:opacity-90'
+  const iconClass = 'flex h-8 w-8 items-center justify-center rounded-lg no-underline transition-colors hover:bg-ted-light/70 sm:h-9 sm:w-9'
 
   return (
     <div className={cn('flex items-center gap-0.5', className)}>
@@ -120,9 +120,9 @@ function MobileDrawer({
   )
 }
 
-const siteNavLink = 'rounded-lg px-3.5 py-2.5 text-sm font-medium no-underline transition-colors'
-const siteNavIdle = 'text-ink-soft hover:bg-ted-light/60 hover:text-ink'
-const siteNavActive = 'bg-ted-light/70 text-ted-blue font-semibold'
+const siteNavLink = 'rounded-lg px-3 py-2 text-sm font-medium no-underline transition-colors'
+const siteNavIdle = 'text-ink-soft hover:text-ink'
+const siteNavActive = 'text-ted-blue font-semibold'
 
 function AuthLinks({
   light,
@@ -146,7 +146,7 @@ function AuthLinks({
       <div className="flex items-center gap-2 sm:gap-3">
         <Link to="/login" className={cn(linkClass, 'px-2 py-2')}>เข้าสู่ระบบ</Link>
         <Link to="/register" className={light ? 'btn-signup' : 'btn-signup btn-signup--solid'}>
-          สมัคร
+          สมัครสมาชิก
         </Link>
       </div>
     )
@@ -248,17 +248,17 @@ export function SiteNavbar() {
 
       <header
         className={cn(
-          'sticky top-0 z-40 border-b transition-all duration-300',
+          'sticky top-0 z-40 transition-all duration-300',
           scrolled
-            ? 'border-line/70 bg-surface/90 shadow-nav backdrop-blur-md'
-            : 'border-line/70 bg-gradient-to-b from-ted-light/70 via-ted-mist/40 to-surface',
+            ? 'border-b border-line/50 bg-surface/90 shadow-nav backdrop-blur-md'
+            : 'border-b border-transparent bg-paper',
         )}
       >
         <div className="wrap">
           <div
             className={cn(
               'flex items-center justify-between gap-3 transition-all duration-300 md:gap-4',
-              scrolled ? 'py-2 md:py-2.5' : 'py-3 md:py-4',
+              scrolled ? 'py-2 md:py-2.5' : 'py-3 md:py-3.5',
             )}
           >
             <HeaderBrand compact={scrolled} />
@@ -280,20 +280,22 @@ export function SiteNavbar() {
 
             <div className="hidden items-center gap-2 lg:flex">
               <HeaderSocialLinks />
-              <div className="mx-1 h-6 w-px bg-line" />
               <AuthLinks user={user} profile={profile} isAdmin={isAdmin} unreadCount={unreadCount} />
               {user && (
-                <button onClick={() => signOut()} className="ml-1 px-2 py-2 text-sm font-medium text-ink-soft hover:text-ink">ออก</button>
+                <button onClick={() => signOut()} className="px-2 py-2 text-sm font-medium text-ink-soft hover:text-ink">ออก</button>
               )}
             </div>
 
-            <button
-              className="rounded-xl p-2.5 text-ink hover:bg-flow-bg lg:hidden"
-              onClick={() => setOpen(true)}
-              aria-label="เมนู"
-            >
-              <Menu className="h-6 w-6" />
-            </button>
+            <div className="flex items-center gap-1 lg:hidden">
+              <HeaderSocialLinks />
+              <button
+                className="rounded-xl p-2.5 text-ink hover:bg-flow-bg"
+                onClick={() => setOpen(true)}
+                aria-label="เมนู"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+            </div>
           </div>
         </div>
       </header>
