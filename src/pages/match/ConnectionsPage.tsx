@@ -8,6 +8,7 @@ import { Badge } from '../../components/ui/Badge'
 import { Button } from '../../components/ui/Button'
 import { timeAgo } from '../../lib/utils'
 import { CONNECTION_STATUS_LABELS } from '../../lib/labels'
+import { TED_EVENT_SLUG, personPath, peoplePath } from '../../lib/ted'
 import type { ConnectionRequest, ConnectionStatus, Notification } from '../../types'
 
 const STATUS_VARIANT: Record<ConnectionStatus, 'green' | 'red' | 'gold' | 'default'> = {
@@ -141,6 +142,14 @@ export function ConnectionsPage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-medium text-ink">{c.sender?.full_name}</p>
+                      {c.target_type === 'individual' && (
+                        <Link
+                          to={personPath(TED_EVENT_SLUG, c.target_id)}
+                          className="mt-1 block text-sm font-medium text-ted-blue no-underline hover:underline"
+                        >
+                          ดูโปรไฟล์ TED
+                        </Link>
+                      )}
                       {c.message && <p className="mt-1 text-sm text-ink-soft">{c.message}</p>}
                       <p className="mt-1 text-xs text-ink-soft/70">{timeAgo(c.created_at)}</p>
                     </div>
@@ -173,7 +182,12 @@ export function ConnectionsPage() {
             <Card className="py-10 text-center">
               <Send className="mx-auto mb-3 h-8 w-8 text-line" />
               <p className="text-ink-soft">ยังไม่ได้ส่งคำขอ</p>
-              <Link to="/match/discover" className="btn-primary mt-4">ค้นหา Partner</Link>
+              <div className="mt-4 flex flex-col items-center gap-2 sm:flex-row sm:justify-center">
+                <Link to="/match/discover" className="btn-primary">ค้นหา Partner</Link>
+                <Link to={peoplePath(TED_EVENT_SLUG)} className="btn-secondary">
+                  หาทีม TED Youth
+                </Link>
+              </div>
             </Card>
           ) : (
             <div className="space-y-3">
@@ -182,6 +196,14 @@ export function ConnectionsPage() {
                   <div className="flex items-start justify-between">
                     <div>
                       <p className="font-medium text-ink">ถึง: {c.receiver?.full_name}</p>
+                      {c.target_type === 'individual' && (
+                        <Link
+                          to={personPath(TED_EVENT_SLUG, c.target_id)}
+                          className="mt-1 block text-sm font-medium text-ted-blue no-underline hover:underline"
+                        >
+                          ดูโปรไฟล์ TED
+                        </Link>
+                      )}
                       {c.message && <p className="mt-1 text-sm text-ink-soft">{c.message}</p>}
                       <p className="mt-1 text-xs text-ink-soft/70">{timeAgo(c.created_at)}</p>
                     </div>

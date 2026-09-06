@@ -5,7 +5,7 @@ import { cn } from '../../lib/utils'
 type BrandLogoSize = 'nav' | 'footer' | 'auth' | 'compact'
 
 const SIZE_CLASSES: Record<BrandLogoSize, string> = {
-  nav: 'h-11 w-auto max-w-[min(56vw,200px)] sm:h-14 sm:max-w-[280px] md:h-16 md:max-w-[340px] lg:h-[72px] lg:max-w-[400px]',
+  nav: 'h-9 w-auto max-w-[min(48vw,168px)] sm:h-12 sm:max-w-[240px] md:h-16 md:max-w-[340px] lg:h-[72px] lg:max-w-[400px]',
   footer: 'h-10 w-auto max-w-[210px] sm:h-11 sm:max-w-[240px]',
   auth: 'h-14 w-auto max-w-[280px] sm:h-16 sm:max-w-[320px]',
   compact: 'h-9 w-auto max-w-[180px] sm:h-10 sm:max-w-[200px]',

@@ -14,7 +14,7 @@ interface AuthContextType {
     password: string,
     fullName: string,
     affiliation?: Affiliation,
-  ) => Promise<{ error: Error | null }>
+  ) => Promise<{ error: Error | null; session: Session | null }>
   signOut: () => Promise<void>
   refreshProfile: () => Promise<void>
 }
@@ -97,9 +97,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName, affiliation } },
+      options: {
+        data: { full_name: fullName, affiliation },
+        emailRedirectTo: `${window.location.origin}/login`,
+      },
     })
-    if (error) return { error: error as Error }
+    if (error) return { error: error as Error, session: null }
 
     /**
      * trigger handle_new_user เขียนแค่ full_name/avatar_url — สังกัดที่ผู้ใช้เลือก
@@ -110,7 +113,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await supabase.from('profiles').update({ affiliation }).eq('id', data.session.user.id)
     }
 
-    return { error: null }
+    return { error: null, session: data.session }
   }
 
   const signOut = async () => {

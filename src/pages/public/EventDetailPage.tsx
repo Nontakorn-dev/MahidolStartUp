@@ -3,11 +3,13 @@ import {
   Calendar,
   ExternalLink,
   MapPin,
+  Search,
   Sparkles,
   Users,
 } from 'lucide-react'
-import { deadlineDisplay, effectiveStatus } from '../../data/events'
+import { deadlineDisplay, effectiveStatus, type ClubEvent } from '../../data/events'
 import { useClubEvent } from '../../lib/events'
+import { peoplePath } from '../../lib/ted'
 import { EventCard } from '../../components/ui/EventCard'
 import { BackLink } from '../../components/ui/BackLink'
 import { CLUB_EVENT_STATUS_LABELS } from '../../lib/labels'
@@ -106,11 +108,9 @@ export function EventDetailPage() {
             )}
           </div>
 
-          {event.registrationUrl && !isClosed && (
-            <div className="mt-8">
-              <a href={event.registrationUrl} target="_blank" rel="noopener noreferrer" className="btn-accent">
-                <ExternalLink className="h-4 w-4" /> สมัครเลย
-              </a>
+          {!isClosed && (event.applyPath || event.registrationUrl) && (
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+              <EventPrimaryCta event={event} />
             </div>
           )}
         </div>
@@ -185,6 +185,27 @@ export function EventDetailPage() {
               </section>
             )}
 
+            {event.applyPath && !isClosed && (
+              <section>
+                <h2 className="font-heading text-xl text-ink">เส้นทางผู้สมัคร</h2>
+                <ol className="ted-journey mt-5">
+                  {[
+                    { n: '1', title: 'เข้ามาจากลิงก์', body: 'เปิดหน้าโครงการนี้จาก LINE หรือโพสต์ของชมรม' },
+                    { n: '2', title: 'สำรวจ', body: 'อ่านโจทย์ คุณสมบัติ และกำหนดการ' },
+                    { n: '3', title: 'สมัคร / จับคู่ทีม', body: 'มีทีมแล้วก็ลงทะเบียนทีม ยังไม่มีก็กรอกสกิลแล้วให้คนอื่นค้นพบ' },
+                    { n: '4', title: 'ยื่นใบสมัคร', body: 'ยื่นในนามทีม เมื่อพร้อม — แนบ CV ได้' },
+                    { n: '5', title: 'เริ่มทำ', body: 'ได้รับคอนเฟิร์มแล้วลงมือสร้างต้นแบบ' },
+                  ].map((step) => (
+                    <li key={step.n} className="ted-journey__step">
+                      <span className="ted-journey__n">{step.n}</span>
+                      <strong>{step.title}</strong>
+                      <p>{step.body}</p>
+                    </li>
+                  ))}
+                </ol>
+              </section>
+            )}
+
             {/* Eligibility */}
             {event.eligibility && event.eligibility.length > 0 && (
               <section>
@@ -221,6 +242,25 @@ export function EventDetailPage() {
                     ลงชื่อกับ MSC Connect
                   </Link>
                 </>
+              ) : event.applyPath ? (
+                <div className="mt-5 space-y-3">
+                  <Link to={event.applyPath} className="btn-primary w-full">
+                    สมัครและหาทีมบนเว็บ
+                  </Link>
+                  <Link to={peoplePath(event.slug)} className="btn-secondary w-full">
+                    <Search className="h-4 w-4" /> ค้นหาเพื่อนร่วมทีม
+                  </Link>
+                  {event.registrationUrl && (
+                    <a
+                      href={event.registrationUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="block text-center text-sm font-medium text-ink-soft no-underline hover:text-ink"
+                    >
+                      ยื่นใบสมัครอย่างเป็นทางการ
+                    </a>
+                  )}
+                </div>
               ) : event.registrationUrl ? (
                 <a
                   href={event.registrationUrl}
@@ -256,4 +296,29 @@ export function EventDetailPage() {
       </div>
     </div>
   )
+}
+
+function EventPrimaryCta({ event }: { event: ClubEvent }) {
+  if (event.applyPath) {
+    return (
+      <>
+        <Link to={event.applyPath} className="btn-accent">
+          สมัครและหาทีมบนเว็บ
+        </Link>
+        <Link to={peoplePath(event.slug)} className="btn-outline-light">
+          <Search className="h-4 w-4" /> ค้นหาเพื่อนร่วมทีม
+        </Link>
+      </>
+    )
+  }
+
+  if (event.registrationUrl) {
+    return (
+      <a href={event.registrationUrl} target="_blank" rel="noopener noreferrer" className="btn-accent">
+        <ExternalLink className="h-4 w-4" /> สมัครเลย
+      </a>
+    )
+  }
+
+  return null
 }

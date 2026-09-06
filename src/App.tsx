@@ -10,6 +10,9 @@ import { HomePage } from './pages/public/HomePage'
 import { AboutPage } from './pages/public/AboutPage'
 import { EventsPage } from './pages/public/EventsPage'
 import { EventDetailPage } from './pages/public/EventDetailPage'
+import { EventApplyPage } from './pages/events/EventApplyPage'
+import { EventPeoplePage } from './pages/events/EventPeoplePage'
+import { EventPersonPage } from './pages/events/EventPersonPage'
 import { PostsPage } from './pages/public/PostsPage'
 import { PostDetailPage } from './pages/public/PostDetailPage'
 import { NotFoundPage } from './pages/public/NotFoundPage'
@@ -64,6 +67,9 @@ export default function App() {
               <Route path="about" element={<AboutPage />} />
               <Route path="events" element={<EventsPage />} />
               <Route path="events/:slug" element={<EventDetailPage />} />
+              <Route path="events/:slug/apply" element={<ProtectedRoute><EventApplyPage /></ProtectedRoute>} />
+              <Route path="events/:slug/people" element={<EventPeoplePage />} />
+              <Route path="events/:slug/people/:id" element={<EventPersonPage />} />
               <Route path="news" element={<PostsPage />} />
               <Route path="news/:slug" element={<PostDetailPage />} />
               <Route path="posts" element={<Navigate to="/news" replace />} />

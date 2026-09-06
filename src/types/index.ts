@@ -115,6 +115,32 @@ export interface Notification {
   created_at: string
 }
 
+export type TedJoinPath = 'has_team' | 'looking_for_team'
+
+export interface TedParticipant {
+  id: string
+  user_id: string
+  event_slug: string
+  path: TedJoinPath
+  display_name: string
+  faculty: string | null
+  bio: string | null
+  idea: string | null
+  team_name: string | null
+  team_size: number | null
+  skills: string[]
+  interests: string[]
+  looking_for: string[]
+  cv_path: string | null
+  cv_file_name: string | null
+  linkedin_url: string | null
+  line_id: string | null
+  is_public: boolean
+  created_at: string
+  updated_at: string
+  profiles?: Pick<Profile, 'full_name' | 'affiliation' | 'avatar_url' | 'faculty'>
+}
+
 export interface MediaAsset {
   id: string
   uploaded_by: string

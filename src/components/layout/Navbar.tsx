@@ -6,9 +6,11 @@ import { cn } from '../../lib/utils'
 import { useQuery } from '@tanstack/react-query'
 import { supabase } from '../../lib/supabase'
 import { SOCIAL_LINKS, SOCIAL_ICONS } from '../../lib/constants'
+import { TED_EVENT_SLUG } from '../../lib/ted'
 import { BrandLogo } from './BrandLogo'
 
 const navLinks = [
+  { to: `/events/${TED_EVENT_SLUG}`, label: 'TED Youth' },
   { to: '/events', label: 'กิจกรรม' },
   { to: '/news', label: 'ข่าวสาร' },
   { to: '/match', label: 'MSC Connect' },
@@ -34,7 +36,7 @@ function useNotifications() {
 }
 
 /** โลโก้เต็มตอนอยู่บนสุด แล้วย่อลงเมื่อเลื่อนหน้า เพื่อให้แถบเมนูติดบนได้โดยไม่กินจอ */
-const COMPACT_LOGO = 'h-11 max-w-[220px] sm:h-12 sm:max-w-[260px] md:h-14 md:max-w-[300px] lg:h-14 lg:max-w-[320px]'
+const COMPACT_LOGO = 'h-9 max-w-[160px] sm:h-11 sm:max-w-[220px] md:h-14 md:max-w-[300px] lg:h-14 lg:max-w-[320px]'
 
 function HeaderBrand({ compact = false }: { compact?: boolean }) {
   return (
@@ -72,7 +74,7 @@ function HeaderSocialLinks({ className }: { className?: string }) {
         title="Line OpenChat"
         aria-label="Line OpenChat"
       >
-        <img src={SOCIAL_ICONS.line} alt="" className="h-5 w-5 object-contain" width={20} height={20} />
+        <img src={SOCIAL_ICONS.line} alt="" className="h-4 w-4 object-contain sm:h-5 sm:w-5" width={20} height={20} />
       </a>
       <a
         href={SOCIAL_LINKS.instagram}
@@ -82,7 +84,7 @@ function HeaderSocialLinks({ className }: { className?: string }) {
         title="@mahidolstartup_official"
         aria-label="Instagram"
       >
-        <img src={SOCIAL_ICONS.instagram} alt="" className="h-5 w-5 object-contain" width={20} height={20} />
+        <img src={SOCIAL_ICONS.instagram} alt="" className="h-4 w-4 object-contain sm:h-5 sm:w-5" width={20} height={20} />
       </a>
     </div>
   )
@@ -257,11 +259,13 @@ export function SiteNavbar() {
         <div className="wrap">
           <div
             className={cn(
-              'flex items-center justify-between gap-3 transition-all duration-300 md:gap-4',
-              scrolled ? 'py-2 md:py-2.5' : 'py-3 md:py-3.5',
+              'flex items-center justify-between gap-2 transition-all duration-300 md:gap-4',
+              scrolled ? 'py-2 md:py-2.5' : 'py-2.5 md:py-3.5',
             )}
           >
-            <HeaderBrand compact={scrolled} />
+            <div className="min-w-0 shrink">
+              <HeaderBrand compact={scrolled} />
+            </div>
 
             <nav className="hidden items-center gap-0.5 lg:flex">
               {navLinks.map((link) => {
@@ -286,14 +290,14 @@ export function SiteNavbar() {
               )}
             </div>
 
-            <div className="flex items-center gap-1 lg:hidden">
+            <div className="flex shrink-0 items-center gap-0.5 lg:hidden">
               <HeaderSocialLinks />
               <button
-                className="rounded-xl p-2.5 text-ink hover:bg-flow-bg"
+                className="rounded-lg p-2 text-ink hover:bg-flow-bg"
                 onClick={() => setOpen(true)}
                 aria-label="เมนู"
               >
-                <Menu className="h-6 w-6" />
+                <Menu className="h-5 w-5" />
               </button>
             </div>
           </div>

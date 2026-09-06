@@ -49,9 +49,9 @@ export function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <header className="relative overflow-hidden bg-gradient-to-b from-paper via-surface to-ted-mist/70">
+      <header className="relative overflow-x-clip bg-gradient-to-b from-paper via-surface to-ted-mist/70">
         <div className="wrap relative">
-          <div className="home-hero grid items-center gap-6 pb-8 pt-4 sm:gap-8 sm:pb-10 sm:pt-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 lg:pb-16 lg:pt-8 xl:gap-16">
+          <div className="home-hero grid items-center gap-4 pb-6 pt-3 sm:gap-8 sm:pb-10 sm:pt-6 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-14 lg:pb-16 lg:pt-8 xl:gap-16">
             <div className="home-hero__copy order-1 animate-fade-up text-center lg:text-left">
               <div className="eyebrow eyebrow--plain">Supported by iNT Mahidol</div>
               <h1 className="home-hero__title">

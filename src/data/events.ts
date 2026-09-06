@@ -22,9 +22,45 @@ export interface ClubEvent {
   /** เนื้อหาแบบ rich text สำหรับกิจกรรมที่สร้างจาก CMS */
   richBody?: Record<string, unknown> | null
   source?: 'curated' | 'cms'
+  /** สมัครในเว็บ (ล็อกอิน + หาทีม) — ถ้ามีจะใช้แทน / คู่กับลิงก์ภายนอก */
+  applyPath?: string
 }
 
+export const TED_EVENT_SLUG = 'mahidol-ted-youth-startup-2026'
+
 export const CLUB_EVENTS: ClubEvent[] = [
+  {
+    id: 'ted-2026',
+    slug: TED_EVENT_SLUG,
+    title: 'Mahidol TED Youth Startup 2026',
+    shortTitle: 'TED Youth Startup',
+    tagline: 'ทุนพัฒนาไอเดียและต้นแบบสูงสุด 1.5 ล้านบาท สำหรับนิสิต–นักศึกษา และบัณฑิตจบใหม่ — เปิดรับสมัครและหาทีมบนเว็บแล้ว',
+    coverImage: '/content/Mahidol-TED.jpg',
+    category: 'ทุนสนับสนุน',
+    status: 'open',
+    deadline: '2026-11-30',
+    deadlineLabel: 'สมัครถึง 30 พ.ย. 2569',
+    startAt: '2026-11-30',
+    location: 'TED Fund × Mahidol',
+    applyPath: `/events/${TED_EVENT_SLUG}/apply`,
+    registrationUrl: 'https://forms.gle/tt4BjaRnfRyefmjeA',
+    organizer: 'TED Fund × Mahidol',
+    eligibility: [
+      'นิสิต–นักศึกษา และบัณฑิตจบใหม่ไม่เกิน 5 ปี',
+    ],
+    highlights: [
+      'ทุนสนับสนุนสูงสุด 1.5 ล้านบาท',
+      'สมัครบนเว็บได้เลย — มีทีมหรือยังไม่มีก็ได้',
+      'ระบบจับคู่ทีมตามสกิลและความสนใจ',
+      'แนบ CV / Resume เพื่อให้คนอื่นค้นพบ',
+      'Mentoring, Co-working Space และสนับสนุนด้านธุรกิจ',
+    ],
+    body: [
+      'Mahidol TED Youth Startup 2026 ครั้งที่ 2 เปิดรับสมัครแล้ว — โครงการสนับสนุนนิสิต นักศึกษา และบัณฑิตจบใหม่ เพื่อพัฒนาธุรกิจบนฐานเทคโนโลยีและนวัตกรรม',
+      'สมัครบนเว็บนี้ได้เลย: สำรวจโครงการ เลือกเส้นทาง (มีทีมแล้ว หรืออยากหาทีม) กรอกสกิล/ความสนใจ แนบ CV ได้ แล้วค้นพบผู้สมัครคนอื่นเพื่อจับคู่ทีม ก่อนยื่นใบสมัครในนามทีม',
+      'ผู้เข้าร่วมจะได้รับ Funding สำหรับพัฒนาไอเดียและต้นแบบ Mentoring จากผู้เชี่ยวชาญ พื้นที่ Co-working Space การสนับสนุนด้านธุรกิจ การพัฒนาต้นแบบ (Prototyping) และการเตรียม Proposal ให้พร้อมยื่นทุน',
+    ],
+  },
   {
     id: 'tap-2026',
     slug: 'talent-accelerator-program-2026',
@@ -82,35 +118,6 @@ export const CLUB_EVENTS: ClubEvent[] = [
     body: [
       'สถาบันบริหารจัดการเทคโนโลยีและนวัตกรรม (iNT) เชิญชวนนักศึกษามหาวิทยาลัยมหิดลที่มีไอเดียสร้างสรรค์ อยากสร้างธุรกิจของตัวเอง เข้าร่วมโครงการ Mahidol Startup Thailand League 2026',
       'โอกาสที่จะได้รับ: ทุนต่อยอดไอเดีย คำแนะนำจากที่ปรึกษา/ผู้เชี่ยวชาญ และพบปะแลกเปลี่ยนไอเดียเพื่อสร้างเครือข่ายความร่วมมือต่าง ๆ',
-    ],
-  },
-  {
-    id: 'ted-2026',
-    slug: 'mahidol-ted-youth-startup-2026',
-    title: 'Mahidol TED Youth Startup 2026',
-    shortTitle: 'TED Youth Startup',
-    tagline: 'ทุนพัฒนาไอเดียและต้นแบบสูงสุด 1.5 ล้านบาท สำหรับนิสิต–นักศึกษา และบัณฑิตจบใหม่',
-    coverImage: '/content/Mahidol-TED.jpg',
-    category: 'ทุนสนับสนุน',
-    status: 'open',
-    deadline: '2026-02-28',
-    deadlineLabel: 'สมัครถึง 28 ก.พ. 2569',
-    startAt: '2026-02-28',
-    location: 'TED Fund × Mahidol',
-    registrationUrl: 'https://forms.gle/tt4BjaRnfRyefmjeA',
-    organizer: 'TED Fund × Mahidol',
-    eligibility: [
-      'นิสิต–นักศึกษา และบัณฑิตจบใหม่ไม่เกิน 5 ปี',
-    ],
-    highlights: [
-      'ทุนสนับสนุนสูงสุด 1.5 ล้านบาท',
-      'Mentoring จากผู้เชี่ยวชาญ',
-      'Co-working Space และสนับสนุนด้านธุรกิจ',
-      'พัฒนาต้นแบบ (Prototyping) และเตรียม Proposal',
-    ],
-    body: [
-      'Mahidol TED Youth Startup 2026 ครั้งที่ 2 เปิดรับสมัครแล้ว — โครงการสนับสนุนนิสิต นักศึกษา และบัณฑิตจบใหม่ เพื่อพัฒนาธุรกิจบนฐานเทคโนโลยีและนวัตกรรม',
-      'ผู้เข้าร่วมจะได้รับ Funding สำหรับพัฒนาไอเดียและต้นแบบ Mentoring จากผู้เชี่ยวชาญ พื้นที่ Co-working Space การสนับสนุนด้านธุรกิจ การพัฒนาต้นแบบ (Prototyping) และการเตรียม Proposal ให้พร้อมยื่นทุน',
     ],
   },
   {

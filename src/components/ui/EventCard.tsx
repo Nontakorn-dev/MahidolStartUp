@@ -73,7 +73,7 @@ export function EventCard({
           )}
 
           <span className="event-card__cta">
-            {isClosed ? 'ดูสรุปโครงการ' : 'ดูรายละเอียด'}
+            {isClosed ? 'ดูสรุปโครงการ' : event.applyPath ? 'สมัครและหาทีม' : 'ดูรายละเอียด'}
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </span>
         </div>

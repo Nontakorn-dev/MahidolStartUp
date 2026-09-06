@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { SOCIAL_LINKS, SOCIAL_ICONS } from '../../lib/constants'
+import { TED_EVENT_SLUG, applyPath, peoplePath } from '../../lib/ted'
 import { BrandLogo } from './BrandLogo'
 
 const NAV_EXPLORE = [
@@ -10,6 +11,8 @@ const NAV_EXPLORE = [
 ]
 
 const NAV_JOIN = [
+  { to: applyPath(TED_EVENT_SLUG), label: 'สมัคร TED Youth' },
+  { to: peoplePath(TED_EVENT_SLUG), label: 'หาทีม TED' },
   { to: '/register/startup', label: 'ลงทะเบียน Startup' },
   { to: '/register/partner', label: 'เป็น Mentor' },
   { to: '/match/discover', label: 'ค้นหา Partner' },

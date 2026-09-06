@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
-import { Rocket, Handshake, Search, Sparkles } from 'lucide-react'
+import { Rocket, Handshake, Search, Sparkles, Users } from 'lucide-react'
 import { PageHero } from '../../components/ui/PageHero'
 import { SectionHeader } from '../../components/ui/SectionHeader'
 import { FeaturedStartupsSection } from '../../components/home/FeaturedStartupsSection'
+import { TED_EVENT_SLUG, peoplePath, applyPath } from '../../lib/ted'
 
 export function MatchHubPage() {
   return (
@@ -29,6 +30,29 @@ export function MatchHubPage() {
       </PageHero>
 
       <section className="wrap section-pad !pt-12">
+        <div className="ted-spotlight">
+          <div>
+            <p className="eyebrow">กำลังเปิดรับ</p>
+            <h2 className="mt-2 font-heading text-2xl text-ink md:text-3xl">TED Youth Startup 2026</h2>
+            <p className="mt-3 max-w-xl text-sm leading-relaxed text-ink-soft md:text-base">
+              สมัครบนเว็บได้เลย มีทีมแล้วก็ลงทะเบียนทีม ยังไม่มีก็กรอกสกิล แนบ CV แล้วให้คนอื่นค้นพบคุณ
+            </p>
+            <div className="mt-5 flex flex-wrap gap-3">
+              <Link to={applyPath(TED_EVENT_SLUG)} className="btn-primary">
+                สมัครและหาทีม
+              </Link>
+              <Link to={peoplePath(TED_EVENT_SLUG)} className="btn-secondary">
+                <Users className="h-4 w-4" /> ดูผู้สมัครในโครงการ
+              </Link>
+            </div>
+          </div>
+          <p className="rounded-2xl bg-surface/80 p-5 text-sm leading-relaxed text-ink-soft">
+            เส้นทางเดียวกับที่ชมรมออกแบบไว้: สำรวจโครงการ → เลือกมีทีมหรือหาทีม → ยื่นใบสมัครในนามทีม → เริ่มสร้างต้นแบบ
+          </p>
+        </div>
+      </section>
+
+      <section className="wrap section-pad !pt-4">
         <SectionHeader
           eyebrow="ทำไมต้อง MSC Connect"
           title="จับคู่ได้ทั้งปี ไม่ต้องรอรอบโครงการ"
